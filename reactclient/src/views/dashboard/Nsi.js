@@ -188,22 +188,22 @@ const Nsi = () => {
               <h4 className="card-title mb-3">Справочники</h4>
               <CNavLink href="#/companies" className="text-primary m-2 font-weight-bold">
                 <CIcon icon={cilBook} />
-                Контрагенты
+                <span className="m-2">Контрагенты</span>
               </CNavLink>
               <CNavLink href="#" className="text-primary m-2 font-weight-bold">
                 <CIcon icon={cilBook} />
-                Типы грузов
+                <span className="m-2">Типы грузов</span>
               </CNavLink>
             </CCol>
-            <CCol sm={6} className="d-none d-md-block">
+            <CCol sm={6}>
               <h4 className="card-title mb-3">Документы</h4>
               <CNavLink href="#" className="text-primary m-2 font-weight-bold">
                 <CIcon icon={cilFile} />
-                Заказы
+                <span className="m-2">Заказы</span>
               </CNavLink>
               <CNavLink href="#" className="text-primary m-2 font-weight-bold">
                 <CIcon icon={cilFile} />
-                <span className="ml-4">Договора</span>
+                <span className="m-2">Договора</span>
               </CNavLink>
             </CCol>
           </CRow>
