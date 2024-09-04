@@ -19,6 +19,9 @@ import {
   CTableHeaderCell,
   CTableRow,
   CFormCheck,
+  CNavLink,
+  CNavItem,
+  CNav,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -46,6 +49,8 @@ import {
   cilUser,
   cilUserFemale,
   cilTranslate,
+  cilPlus,
+  cilLocationPin,
 } from '@coreui/icons'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
@@ -205,6 +210,20 @@ const ContragentsList = () => {
           <CCard className="mb-4">
             <CCardHeader>Контрагенты {' & '} Организации</CCardHeader>
             <CCardBody>
+              <CNav variant="pills" className="card-header-pills">
+                <CNavItem>
+                  <CNavLink href="#" className="text-primary m-2 font-weight-bold">
+                    <CIcon icon={cilPlus} />
+                    Добавить
+                  </CNavLink>
+                </CNavItem>
+                <CNavItem>
+                  <CNavLink href="#" className="text-primary m-2 font-weight-bold">
+                    <CIcon icon={cilLocationPin} />
+                    На карту
+                  </CNavLink>
+                </CNavItem>
+              </CNav>
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead className="text-nowrap">
                   <CTableRow>
