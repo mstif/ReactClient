@@ -37,6 +37,8 @@ import {
   cifPl,
   cifUs,
   cifRu,
+  cilTrash,
+  cilPencil,
   cibTwitter,
   cilCloudDownload,
   cilPeople,
@@ -216,7 +218,7 @@ const ContragentsList = () => {
                     <CTableHeaderCell className="bg-body-tertiary text-center">
                       ИНН
                     </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Комментарий</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Действия</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -251,7 +253,12 @@ const ContragentsList = () => {
                       </CTableDataCell>
                       <CTableDataCell className="text-center small">{item.inn}</CTableDataCell>
                       <CTableDataCell>
-                        <div className="small text-body-secondary text-nowrap">{item.comment}</div>
+                        <CButton color="primary" variant="ghost">
+                          <CIcon size="sm" icon={cilPencil}></CIcon>
+                        </CButton>
+                        <CButton color="primary" variant="ghost">
+                          <CIcon size="sm" icon={cilTrash}></CIcon>
+                        </CButton>
                       </CTableDataCell>
                     </CTableRow>
                   ))}
