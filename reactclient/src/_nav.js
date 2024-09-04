@@ -40,6 +40,12 @@ const _nav = [
   },
   {
     component: CNavItem,
+    name: 'Отчеты',
+    to: '/theme/typography',
+    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
     name: 'Профиль',
     to: '/theme/typography',
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
@@ -53,6 +59,16 @@ const _nav = [
     name: 'Настройки',
     to: '/theme/typography',
     icon: <CIcon icon={cilCog} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
+    name: 'Инструкции',
+  },
+  {
+    component: CNavItem,
+    name: 'Как начать',
+    to: '/theme/typography',
+    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
   },
 
   {
