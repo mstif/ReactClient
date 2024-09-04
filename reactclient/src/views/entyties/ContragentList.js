@@ -18,6 +18,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CFormCheck,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -207,6 +208,7 @@ const ContragentsList = () => {
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead className="text-nowrap">
                   <CTableRow>
+                    <CTableHeaderCell className="bg-body-tertiary text-center"></CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center">
                       <CIcon icon={cilTranslate} />
                     </CTableHeaderCell>
@@ -224,6 +226,9 @@ const ContragentsList = () => {
                 <CTableBody>
                   {items.map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
+                      <CTableDataCell className="text-center">
+                        <CFormCheck id={'chk' + index} />
+                      </CTableDataCell>
                       <CTableDataCell className="text-center">
                         <CIcon size="xl" icon={cifRu} title={'РФ'} />
                       </CTableDataCell>
