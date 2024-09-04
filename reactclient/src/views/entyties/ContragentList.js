@@ -226,7 +226,7 @@ const ContragentsList = () => {
                         <CIcon size="xl" icon={cifRu} title={'РФ'} />
                       </CTableDataCell>
                       <CTableDataCell>
-                        <div>{item.name}</div>
+                        <div className="small">{item.name}</div>
                         <div className="small text-body-secondary text-nowrap">
                           <span className="small">
                             {/*{item.clientCompany*/}
@@ -239,21 +239,17 @@ const ContragentsList = () => {
                           </span>
                         </div>
                       </CTableDataCell>
-                      <CTableDataCell className="text-center">{item.address}</CTableDataCell>
+                      <CTableDataCell className="small">{item.address}</CTableDataCell>
                       <CTableDataCell>
                         <div className="small">
                           <span>
-                            {item.clientCompany
-                              ? 'Продавец '
-                              : '' + item.logisticCompany
-                                ? 'Логист '
-                                : '' + item.deliveryPoint
-                                  ? 'Точка доставки'
-                                  : ''}
+                            {(item.clientCompany ? 'Продавец ' : '') +
+                              (item.logisticCompany ? 'Логист ' : '') +
+                              (item.deliveryPoint ? 'Точка доставки' : '')}
                           </span>
                         </div>
                       </CTableDataCell>
-                      <CTableDataCell className="text-center">{item.inn}</CTableDataCell>
+                      <CTableDataCell className="text-center small">{item.inn}</CTableDataCell>
                       <CTableDataCell>
                         <div className="small text-body-secondary text-nowrap">{item.comment}</div>
                       </CTableDataCell>
