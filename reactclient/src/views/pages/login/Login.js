@@ -80,8 +80,9 @@ const Login = () => {
           </CCol>
         </CRow>
       </CContainer>
+      <div className="message"></div>
     </div>
-  );
+  )
   async function loginHandler(e) {
     e.preventDefault()
     const form_ = e.target, submitter = document.querySelector("input.login")
