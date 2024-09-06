@@ -5,6 +5,7 @@ import ProtectedRoutes from './ProtectedRoutes'
 import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
 import routes from '../src/routes'
+import Contragent from './views/entyties/Contragent'
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
@@ -47,7 +48,7 @@ const App = () => {
           <Route element={<ProtectedRoutes />}>
             <Route path="*" element={<DefaultLayout />} />
             <Route path="/buttons/buttons" element={<Buttons />} />
-{/*            <Route path="/dashboard" element={<Dashboard />} />*/}
+           {/* <Route path="/contragent/:id" element={<Contragent />} />*/}
           </Route>
           <Route exact path="/login" name="Login Page" element={<Login />} />
           <Route exact path="/register" name="Register Page" element={<Register />} />

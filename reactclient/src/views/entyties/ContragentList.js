@@ -203,6 +203,10 @@ const ContragentsList = () => {
     },
   ]
 
+  function handleEdit(id) {
+    document.location = '#/contragent/' + id
+  }
+
   return (
     <>
       <CRow>
@@ -227,6 +231,7 @@ const ContragentsList = () => {
               <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead className="text-nowrap">
                   <CTableRow>
+                    <CTableHeaderCell className="d-none"></CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center"></CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center">
                       <CIcon icon={cilTranslate} />
@@ -245,6 +250,7 @@ const ContragentsList = () => {
                 <CTableBody>
                   {items.map((item, index) => (
                     <CTableRow v-for="item in tableItems" key={index}>
+                      <CTableDataCell className="text-center d-none">{item.id}</CTableDataCell>
                       <CTableDataCell className="text-center">
                         <CFormCheck id={'chk' + index} />
                       </CTableDataCell>
@@ -277,7 +283,11 @@ const ContragentsList = () => {
                       </CTableDataCell>
                       <CTableDataCell className="text-center small">{item.inn}</CTableDataCell>
                       <CTableDataCell>
-                        <CButton color="primary" variant="ghost">
+                        <CButton
+                          color="primary"
+                          variant="ghost"
+                          onClick={(e) => handleEdit(item.id)}
+                        >
                           <CIcon size="sm" icon={cilPencil}></CIcon>
                         </CButton>
                         <CButton color="primary" variant="ghost">

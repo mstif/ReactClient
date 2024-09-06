@@ -1,8 +1,12 @@
 import React from 'react'
 
+//pooling
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const ContragentList = React.lazy(() => import('./views/entyties/ContragentList'))
 const Nsi = React.lazy(() => import('./views/dashboard/Nsi'))
+const Contragent = React.lazy(() => import('./views/entyties/Contragent'))
+
+///
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -58,6 +62,8 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/companies', name: 'Контрагенты', element: ContragentList },
   { path: '/nsi', name: 'Контрагенты', element: Nsi },
+  { path: '/contragent', name: 'Контрагент (редактирование)', element: Contragent },
+  { path: '/contragent/:id', name: 'Контрагент (редактирование)', element: Contragent },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
