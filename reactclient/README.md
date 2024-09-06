@@ -183,3 +183,12 @@ CoreUI is an MIT-licensed open source project and is completely free to use. How
 copyright 2024 creativeLabs Łukasz Holeczek.   
 
 Code released under [the MIT license](https://github.com/coreui/coreui-free-react-admin-template/blob/main/LICENSE).
+
+
+ 
+1. Добавление страницы:
+Берем за шаблон любой готовый компонент, например  Dashboard.js (\ReactClient\src\views\dashboard\Dashboard.js) все лишнее выкидываем
+добавляем нужные компоненты (поля чекбоксы селекты и тд), примеры этих компонентов смотрим в проекте 
+или в документации - ссылки прямо в боковой панели нашего интерфейса или https://coreui.io/react/docs/components 
+ссылки в боковую панель добавляются в _nav.js, новые страницы в роутинг добавляются в route.js 
+можно все посмотреть на примере Contragent и ContragentList. ссылки на новые страницы сущностей добавляем на странице Nsi.js
