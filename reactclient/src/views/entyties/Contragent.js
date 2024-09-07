@@ -89,26 +89,21 @@ const Contragent = () => {
   }, [])
 
   const saveData = async () => {
+    let query = '/api/Contragent/create'
     if (item.id > 0) {
-      const response = await fetch('/api/Contragent/update', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(item),
-      }).then((response) => response.json())
-    } else {
-      const response = await fetch('/api/Contragent/create', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(item),
-      }).then((response) => response.json())
+      query = '/api/Contragent/update'
     }
+    const response = await fetch(query, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(item),
+    }).then((response) => response.json())
+    setItem(response)
   }
+
   const countries = () => {
     if (item.allCountries != undefined) {
       return item.allCountries.map((c, index) => {
