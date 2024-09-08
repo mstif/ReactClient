@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   CAvatar,
@@ -22,6 +22,7 @@ import {
   CFormInput,
   CFormCheck,
   CFormSelect,
+  CSpinner,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -45,6 +46,8 @@ import {
   cilPeople,
   cilUser,
   cilUserFemale,
+  cilCheckAlt,
+  cilPencil,
 } from '@coreui/icons'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
@@ -73,6 +76,8 @@ const Contragent = () => {
     name: '',
   }
   const [item, setItem] = useState(initItem)
+  const [isLoading, setLooding] = useState(false)
+  const [isModified, setModified] = useState(false)
   const params = useParams()
   const getApiData = async () => {
     const itemId = params.id
@@ -93,6 +98,7 @@ const Contragent = () => {
     if (item.id > 0) {
       query = '/api/Contragent/update'
     }
+    setLooding(true)
     const response = await fetch(query, {
       method: 'POST',
       credentials: 'include',
@@ -101,7 +107,9 @@ const Contragent = () => {
       },
       body: JSON.stringify(item),
     }).then((response) => response.json())
+    setLooding(false)
     setItem(response)
+    setModified(false)
   }
 
   const countries = () => {
@@ -117,6 +125,7 @@ const Contragent = () => {
     const value = target.type === 'checkbox' ? target.checked : target.value
     const { name } = target
     setItem((f) => ({ ...f, [name]: value }))
+    setModified(true)
   }
 
   const cs = (val) => {
@@ -241,9 +250,21 @@ const Contragent = () => {
           />
         </CCol>
       </CRow>
-      <CButton onClick={saveData} className="btn btn-primary">
-        Сохранить
-      </CButton>
+      <CRow className="mb-3">
+        <CCol sm={2}>
+          <CButton onClick={saveData} className="btn btn-primary">
+            Сохранить
+          </CButton>
+        </CCol>
+        <CCol sm={1}>
+          <CIcon
+            size="lg"
+            className="text-success mt-2"
+            icon={isModified ? cilPencil : cilCheckAlt}
+          ></CIcon>
+          <CSpinner color="primary" variant="grow" className={isLoading ? '' : 'mt-2 d-none'} />
+        </CCol>
+      </CRow>
     </>
   )
 }
