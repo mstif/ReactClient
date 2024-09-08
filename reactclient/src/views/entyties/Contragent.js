@@ -262,7 +262,9 @@ const Contragent = () => {
             className="text-success mt-2"
             icon={isModified ? cilPencil : cilCheckAlt}
           ></CIcon>
-          <CSpinner color="primary" variant="grow" className={isLoading ? '' : 'mt-2 d-none'} />
+        </CCol>
+        <CCol sm={1}>
+          <CSpinner color="primary" variant="grow" className={isLoading ? '' : 'd-none'} />
         </CCol>
       </CRow>
     </>
