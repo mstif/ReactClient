@@ -94,6 +94,7 @@ const Contragent = () => {
   }, [])
 
   const saveData = async () => {
+    if (isLoading) return
     let query = '/api/Contragent/create'
     if (item.id > 0) {
       query = '/api/Contragent/update'
@@ -107,9 +108,9 @@ const Contragent = () => {
       },
       body: JSON.stringify(item),
     }).then((response) => response.json())
-    setLooding(false)
     setItem(response)
     setModified(false)
+    setLooding(false)
   }
 
   const countries = () => {

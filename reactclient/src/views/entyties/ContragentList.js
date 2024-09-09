@@ -52,7 +52,7 @@ import {
   cilPlus,
   cilLocationPin,
 } from '@coreui/icons'
-
+import { Link, useLocation } from 'react-router-dom'
 import avatar1 from 'src/assets/images/avatars/1.jpg'
 import avatar2 from 'src/assets/images/avatars/2.jpg'
 import avatar3 from 'src/assets/images/avatars/3.jpg'
@@ -62,6 +62,7 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
+import OpenMap1 from '../../map/OpenMap'
 
 const ContragentsList = () => {
   const [items, setItems] = useState([])
@@ -90,6 +91,10 @@ const ContragentsList = () => {
     }).then((response) => getApiData())
   }
 
+  const toMap = () => {
+    window.open('#/openmap', '_blank').focus()
+  }
+
   return (
     <>
       <CRow>
@@ -105,10 +110,19 @@ const ContragentsList = () => {
                   </CNavLink>
                 </CNavItem>
                 <CNavItem>
-                  <CNavLink href="#" className="text-primary m-2 font-weight-bold">
+                  <Link
+                    to={{
+                      pathname: '/openmap',
+                      state: 'dataToPass',
+                      data: 'jjjjuu',
+                    }}
+                    className="text-primary m-2 font-weight-bold"
+                    state={{ from: 'companies' }}
+                    //onClick={toMap}
+                  >
                     <CIcon icon={cilLocationPin} />
                     На карту
-                  </CNavLink>
+                  </Link>
                 </CNavItem>
               </CNav>
               <CTable align="middle" className="mb-0 border" hover responsive>

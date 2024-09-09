@@ -5,7 +5,7 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const ContragentList = React.lazy(() => import('./views/entyties/ContragentList'))
 const Nsi = React.lazy(() => import('./views/dashboard/Nsi'))
 const Contragent = React.lazy(() => import('./views/entyties/Contragent'))
-
+const OpenMap1 = React.lazy(() => import('./map/OpenMap'))
 ///
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -56,14 +56,19 @@ const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
 const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
-
+function Redirect() {
+  //window.location.replace('#/map/map.html')
+  window.location.href = '#/map/map.html'
+  return <></>
+}
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/companies', name: 'Контрагенты', element: ContragentList },
-  { path: '/nsi', name: 'Контрагенты', element: Nsi },
+  { path: '/nsi', name: 'НСИ и документы', element: Nsi },
   { path: '/contragent', name: 'Контрагент (редактирование)', element: Contragent },
   { path: '/contragent/:id', name: 'Контрагент (редактирование)', element: Contragent },
+  { path: '/openmap', name: 'Карта', element: OpenMap1 },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
