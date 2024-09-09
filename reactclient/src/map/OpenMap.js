@@ -55,7 +55,35 @@ import 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'
 import 'src/map/leaflet.css'
 //import '../../js/leaflet.js'
 import { MapContainer, TileLayer, useMap, Marker, Popup } from 'https://cdn.esm.sh/react-leaflet'
+function AdressToMap(points) {
+  if (typeof L !== 'undefined') {
+    var map = L.map('map').setView([55.677584, 37.683105], 13)
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map)
 
+    //var marker = L.marker([55.677584, 37.683105]).addTo(map);
+    // marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    //var popup = L.popup()
+    //    .setLatLng([55.6, 37.683105])
+    //    .setContent("I am a standalone popup.")
+    //    .openOn(map);
+    //map.on('click', onMapClick)
+    $('.leaflet-attribution-flag').remove()
+
+    $.each(points, function (i, a) {
+      let lat = parseFloat(a.lat)
+      let lon = parseFloat(a.lon)
+      let name = a.name
+      if (!isNaN(lon) && !isNaN(lat)) {
+        let adress = a.address
+        var markerp = L.marker([lat, lon]).addTo(map)
+        markerp.bindPopup('<b>' + name + '</b><br>' + adress).openPopup()
+      }
+    })
+  }
+}
 const content = `
 <!DOCTYPE html>
 
@@ -75,6 +103,7 @@ const content = `
 const OpenMap1 = () => {
   const location = useLocation()
   const { from } = location.state
+  const points = location.state.points
   useEffect(() => {
     const script = document.createElement('script')
     script.src = 'src/map/leaflet.js'
@@ -82,8 +111,9 @@ const OpenMap1 = () => {
     document.body.appendChild(script)
     const script1 = document.createElement('script')
     script1.src = 'src/map/mmap.js'
-    script1.async = true
+    //script1.async = true
     document.body.appendChild(script1)
+    AdressToMap(points)
   }, [])
 
   return <div dangerouslySetInnerHTML={{ __html: content }} />

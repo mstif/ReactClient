@@ -66,7 +66,7 @@ import OpenMap1 from '../../map/OpenMap'
 
 const ContragentsList = () => {
   const [items, setItems] = useState([])
-
+  const [pointsAddr, setPoints] = useState([])
   const getApiData = async () => {
     const response = await fetch('/api/Contragent/list-contragents?NotActive=true', {
       method: 'GET',
@@ -94,7 +94,33 @@ const ContragentsList = () => {
   const toMap = () => {
     window.open('#/openmap', '_blank').focus()
   }
+  const points = []
+  const handler = (e) => {
+    var table = document.getElementById('tab')
+    points.length = 0
+    for (var i = 1, row; (row = table.rows[i]); i++) {
+      if (row.cells[1].firstChild.checked) {
+        let cid = Number(row.cells[0].firstChild.data)
+        //let id = cid.substring(4, cid.length)
+        let item = items.find((it) => it.id === cid)
+        if (item == undefined) continue
+        points.push({
+          lat: item.latitude,
+          lon: item.longitude,
+          address: item.address,
+          name: item.name,
+        })
+        //setPoints(points)
+      }
 
+      //iterate through rows
+      //rows would be accessed using the "row" variable assigned in the for loop
+      //for (var j = 0, col; (col = row.cells[j]); j++) {
+      //  //iterate through columns
+      //  //columns would be accessed using the "col" variable assigned in the for loop
+      //}
+    }
+  }
   return (
     <>
       <CRow>
@@ -114,12 +140,11 @@ const ContragentsList = () => {
                     to={{
                       pathname: '/openmap',
                       state: 'dataToPass',
-                      data: 'jjjjuu',
                     }}
-                    className="text-primary m-2 font-weight-bold"
+                    className="nav-link text-primary m-2 font-weight-bold"
                     state={{
                       from: 'companies',
-                      points: { lat: 1, lon: 2, address: 'jjjj', name: 'jkhkh' },
+                      points: points,
                     }}
                     //onClick={toMap}
                   >
@@ -128,7 +153,7 @@ const ContragentsList = () => {
                   </Link>
                 </CNavItem>
               </CNav>
-              <CTable align="middle" className="mb-0 border" hover responsive>
+              <CTable align="middle" className="mb-0 border" hover responsive id="tab">
                 <CTableHead className="text-nowrap">
                   <CTableRow>
                     <CTableHeaderCell className="d-none"></CTableHeaderCell>
@@ -152,7 +177,7 @@ const ContragentsList = () => {
                     <CTableRow v-for="item in tableItems" key={index}>
                       <CTableDataCell className="text-center d-none">{item.id}</CTableDataCell>
                       <CTableDataCell className="text-center">
-                        <CFormCheck id={'chk' + index} />
+                        <CFormCheck id={'chk' + index} onClick={handler} />
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
                         <CIcon size="xl" icon={cifRu} title={'РФ'} />

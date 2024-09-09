@@ -8,7 +8,6 @@ const Page404 = React.lazy(() => import('../views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('../views/pages/page500/Page500'))
 // routes config
 import routes from '../routes'
-const data = {}
 const AppContent = () => {
   return (
     <CContainer className="px-4" lg>
@@ -23,7 +22,7 @@ const AppContent = () => {
                     path={route.path}
                     exact={route.exact}
                     name={route.name}
-                    element={<route.element data={data} />}
+                    element={<route.element />}
                   />
                 )
               )

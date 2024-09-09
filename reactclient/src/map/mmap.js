@@ -1,52 +1,50 @@
 $(document).ready(function () {
-  if (typeof L !== 'undefined') {
-    var map = L.map('map').setView([55.677584, 37.683105], 13)
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map)
-
-    //var marker = L.marker([55.677584, 37.683105]).addTo(map);
-    // marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-    //var popup = L.popup()
-    //    .setLatLng([55.6, 37.683105])
-    //    .setContent("I am a standalone popup.")
-    //    .openOn(map);
-    map.on('click', onMapClick)
-    $('.leaflet-attribution-flag').remove()
-
-    if (typeof model !== 'undefined') {
-      $.each(model.Adresses, function (i, a) {
-        let lon = parseFloat(a.Latitude)
-        let lat = parseFloat(a.Longitude)
-        let name = a.Name
-        let adress = a.Adress
-        var markerp = L.marker([lat, lon]).addTo(map)
-        markerp.bindPopup('<b>' + name + '</b><br>' + adress).openPopup()
-      })
-    }
-  }
-  var select = document.getElementById('adress')
-  if (select != null) {
-    select.addEventListener('change', function () {
-      // Если нужно value
-      // input.value = this.value;
-      // Если нужен текст
-      let position = this.value.split(' ')
-      $('#latitude').val(position[0])
-      $('#longitude').val(position[1])
-      $('#geoadresshidd').val(this.options[this.selectedIndex].text)
-      //input.value = this.options[this.selectedIndex].text;
-    })
-  }
-  if (typeof modelContragent !== 'undefined') {
-  }
-  $('#adress').append(
-    $('<option>', {
-      value: $('#latitude').val() + ' ' + $('#longitude').val(),
-      text: $('#geoadresshidd').val(),
-    }),
-  )
+  //if (typeof L !== 'undefined') {
+  //var map = L.map('map').setView([55.677584, 37.683105], 13)
+  //L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  //  maxZoom: 19,
+  //  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  //}).addTo(map)
+  //var marker = L.marker([55.677584, 37.683105]).addTo(map);
+  // marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+  //var popup = L.popup()
+  //    .setLatLng([55.6, 37.683105])
+  //    .setContent("I am a standalone popup.")
+  //    .openOn(map);
+  //  map.on('click', onMapClick)
+  //  $('.leaflet-attribution-flag').remove()
+  //  if (typeof model !== 'undefined') {
+  //    $.each(model.Adresses, function (i, a) {
+  //      let lon = parseFloat(a.Latitude)
+  //      let lat = parseFloat(a.Longitude)
+  //      let name = a.Name
+  //      let adress = a.Adress
+  //      var markerp = L.marker([lat, lon]).addTo(map)
+  //      markerp.bindPopup('<b>' + name + '</b><br>' + adress).openPopup()
+  //    })
+  //  }
+  //}
+  //var select = document.getElementById('adress')
+  //if (select != null) {
+  //  select.addEventListener('change', function () {
+  //    // Если нужно value
+  //    // input.value = this.value;
+  //    // Если нужен текст
+  //    let position = this.value.split(' ')
+  //    $('#latitude').val(position[0])
+  //    $('#longitude').val(position[1])
+  //    $('#geoadresshidd').val(this.options[this.selectedIndex].text)
+  //    //input.value = this.options[this.selectedIndex].text;
+  //  })
+  //}
+  //if (typeof modelContragent !== 'undefined') {
+  //}
+  //$('#adress').append(
+  //  $('<option>', {
+  //    value: $('#latitude').val() + ' ' + $('#longitude').val(),
+  //    text: $('#geoadresshidd').val(),
+  //  }),
+  //)
 })
 function onMapClick(e) {
   alert('You clicked the map at ' + e.latlng)
@@ -98,16 +96,30 @@ function GeoCode(address) {
     }
   })
 }
-function AdressToMap() {
-  let lat = $('#latitude').val()
-  let lon = $('#longitude').val()
-  window.location =
-    'openmap?Lat=' +
-    lat +
-    '&lon=' +
-    lon +
-    '&adress=' +
-    $('#adress option:selected').text() +
-    '&name=' +
-    $('#name').val()
+function AdressToMap(points) {
+  for (i = 0; i++; i < points.length) {
+    let lat = points[i].lat
+    let lon = points[i].lon
+    window.location =
+      'openmap?Lat=' +
+      lat +
+      '&lon=' +
+      lon +
+      '&adress=' +
+      $('#adress option:selected').text() +
+      '&name=' +
+      $('#name').val()
+  }
+}
+function AdressToMap2(points) {
+  $.each(points, function (i, a) {
+    let lon = parseFloat(a.lat)
+    let lat = parseFloat(a.lon)
+    let name = a.name
+    if (!isNaN(lon) && !isNaN(lat)) {
+      let adress = a.address
+      var markerp = L.marker([lat, lon]).addTo(map)
+      markerp.bindPopup('<b>' + name + '</b><br>' + adress).openPopup()
+    }
+  })
 }
