@@ -117,7 +117,10 @@ const ContragentsList = () => {
                       data: 'jjjjuu',
                     }}
                     className="text-primary m-2 font-weight-bold"
-                    state={{ from: 'companies' }}
+                    state={{
+                      from: 'companies',
+                      points: { lat: 1, lon: 2, address: 'jjjj', name: 'jkhkh' },
+                    }}
                     //onClick={toMap}
                   >
                     <CIcon icon={cilLocationPin} />

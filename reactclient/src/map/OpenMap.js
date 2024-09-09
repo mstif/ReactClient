@@ -72,13 +72,10 @@ const content = `
   <div id="map" style="height:800px"></div>
 </body>
 </html>`
-class OpenMap1 extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-  componentDidMount() {
-    //const location = useLocation()
-    //const { from } = location.state
+const OpenMap1 = () => {
+  const location = useLocation()
+  const { from } = location.state
+  useEffect(() => {
     const script = document.createElement('script')
     script.src = 'src/map/leaflet.js'
     script.async = true
@@ -87,10 +84,8 @@ class OpenMap1 extends React.Component {
     script1.src = 'src/map/mmap.js'
     script1.async = true
     document.body.appendChild(script1)
+  }, [])
 
-  }
-  render() {
-    return <div dangerouslySetInnerHTML={{ __html: content }} />
-  }
+  return <div dangerouslySetInnerHTML={{ __html: content }} />
 }
 export default OpenMap1
