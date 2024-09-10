@@ -84,6 +84,11 @@ function AdressToMap(points) {
     })
   }
 }
+
+function onMapClick(e) {
+  alert('You clicked the map at ' + e.latlng)
+}
+
 const content = `
 <!DOCTYPE html>
 

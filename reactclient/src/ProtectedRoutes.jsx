@@ -19,12 +19,14 @@ function ProtectedRoutes() {
             }
             return response.json();
         }).then(data => {
-            localStorage.setItem("user", data.user.email);
+          localStorage.setItem("user", data.user.user.email);
+          localStorage.setItem("roles", data.user.roles);
             console.log(data.user);
         }).catch(err => {
             console.log("Error protected routes: ", err);
             setWaiting(false);
-            localStorage.removeItem("user");
+          localStorage.removeItem("user");
+          localStorage.removeItem("roles");
         });
     }, []);
 

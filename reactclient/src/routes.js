@@ -6,6 +6,9 @@ const ContragentList = React.lazy(() => import('./views/entyties/ContragentList'
 const Nsi = React.lazy(() => import('./views/dashboard/Nsi'))
 const Contragent = React.lazy(() => import('./views/entyties/Contragent'))
 const OpenMap1 = React.lazy(() => import('./map/OpenMap'))
+const UserList = React.lazy(() => import('./views/entyties/UserList'))
+const User = React.lazy(() => import('./views/entyties/User'))
+const Settings = React.lazy(() => import('./views/dashboard/Settings'))
 ///
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -68,7 +71,11 @@ const routes = [
   { path: '/nsi', name: 'НСИ и документы', element: Nsi },
   { path: '/contragent', name: 'Контрагент (редактирование)', element: Contragent },
   { path: '/contragent/:id', name: 'Контрагент (редактирование)', element: Contragent },
-  { path: '/openmap', name: 'Карта', element: OpenMap1 },
+  { path: '/openmap/', name: 'Карта', element: OpenMap1 },
+  { path: '/user', name: 'Профиль пользователя', element: User },
+  { path: '/user/:id', name: 'Профиль пользователя', element: User },
+  { path: '/settings', name: 'Настройки', element: Settings },
+  { path: '/settings/userlist', name: 'Пользователи', element: UserList },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
