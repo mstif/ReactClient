@@ -133,7 +133,8 @@ const User = () => {
   }
   const handleInput = (e) => {
     if (e.length >= 3) {
-      var query = '/api/Contragent/list-contragents?Name=' + e + '&IsAlive=true&NotActive=false'
+      var query =
+        '/api/Contragent/list-contragents?Name=' + e + '&IsAlive=true&NotActiveFilter=false'
       const response = fetch(query, {
         method: 'GET',
         credentials: 'include',

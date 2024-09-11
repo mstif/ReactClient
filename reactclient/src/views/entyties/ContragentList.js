@@ -68,7 +68,7 @@ const ContragentsList = () => {
   const [items, setItems] = useState([])
   const [pointsAddr, setPoints] = useState([])
   const getApiData = async () => {
-    const response = await fetch('/api/Contragent/list-contragents?NotActive=true', {
+    const response = await fetch('/api/Contragent/list-contragents?NotActiveFilter=true', {
       method: 'GET',
       credentials: 'include',
     }).then((response) => response.json())
