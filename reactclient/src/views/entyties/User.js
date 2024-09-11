@@ -79,8 +79,8 @@ const User = () => {
   const [isLoading, setLooding] = useState(false)
   const [isModified, setModified] = useState(false)
 
-  const [options, setOptions] = useState([])
-  
+  const [optionsC, setOptions] = useState([])
+  const [selectedOption, setSelectedOption] = useState(null)
   const [role, setRole] = useState('')
   const currentRoles = localStorage.getItem('roles')
   const isAdmin = currentRoles.includes('Administrator')
@@ -92,7 +92,8 @@ const User = () => {
       method: 'GET',
       credentials: 'include',
     }).then((response) => response.json())
-
+    setOptions([{ value: response.companyId, label: response.company }])
+    setSelectedOption({ value: response.companyId, label: response.company })
     setItem(response)
     setRole(response.majorRole)
   }
@@ -126,7 +127,9 @@ const User = () => {
     setRole(e.target.value)
   }
   const handleCompany = (e) => {
-    const { target } = e
+    setSelectedOption(e)
+    setItem((f) => ({ ...f, ['companyId']: e.value, ['company']: e.label }))
+    setModified(true)
   }
   const handleInput = (e) => {
     if (e.length >= 3) {
@@ -280,7 +283,12 @@ const User = () => {
           {/*  name="allCompanies"*/}
           {/*  value={''}*/}
           {/*/>*/}
-          <Select options={options} onChange={handleCompany} onInputChange={handleInput} />
+          <Select
+            options={optionsC}
+            onChange={handleCompany}
+            value={selectedOption}
+            onInputChange={handleInput}
+          />
         </CCol>
       </CRow>
       <CRow className="mb-3">
