@@ -52,6 +52,8 @@ import {
 } from '@coreui/icons'
 import { Link, useLocation } from 'react-router-dom'
 import 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'
+import markerIcon from 'src/map/images/marker-icon.png'
+import markerIcon_shadow from 'src/map/images/marker-shadow.png'
 import 'src/map/leaflet.css'
 //import '../../js/leaflet.js'
 import { MapContainer, TileLayer, useMap, Marker, Popup } from 'https://cdn.esm.sh/react-leaflet'
@@ -78,7 +80,11 @@ function AdressToMap(points) {
       let name = a.name
       if (!isNaN(lon) && !isNaN(lat)) {
         let adress = a.address
-        var markerp = L.marker([lat, lon]).addTo(map)
+        var greenIcon = L.icon({
+          iconUrl: markerIcon,
+          shadowUrl: markerIcon_shadow,
+        })
+        var markerp = L.marker([lat, lon], { icon: greenIcon }).addTo(map)
         markerp.bindPopup('<b>' + name + '</b><br>' + adress).openPopup()
       }
     })
