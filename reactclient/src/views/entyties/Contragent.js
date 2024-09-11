@@ -252,21 +252,25 @@ const Contragent = () => {
         </CCol>
       </CRow>
       <CRow className="mb-3">
-        <CCol sm={2}>
+        <CCol sm={3}>
           <CButton onClick={saveData} className="btn btn-primary">
             Сохранить
           </CButton>
         </CCol>
         <CCol sm={1}>
-          <CIcon
-            size="lg"
-            className="text-success mt-2"
-            icon={isModified ? cilPencil : cilCheckAlt}
-          ></CIcon>
+          {isLoading ? (
+            <CSpinner color="primary" variant="grow" className={isLoading ? '' : 'd-none'} />
+          ) : (
+            <CIcon
+              size="lg"
+              className="text-success mt-2"
+              icon={isModified ? cilPencil : cilCheckAlt}
+            ></CIcon>
+          )}
         </CCol>
-        <CCol sm={1}>
-          <CSpinner color="primary" variant="grow" className={isLoading ? '' : 'd-none'} />
-        </CCol>
+        {/*<CCol sm={1}>*/}
+        {/*  <CSpinner color="primary" variant="grow" className={isLoading ? '' : 'd-none'} />*/}
+        {/*</CCol>*/}
       </CRow>
     </>
   )

@@ -142,7 +142,7 @@ const ContragentsList = () => {
                       <CTableDataCell className="small text-center">{item.company}</CTableDataCell>
                       <CTableDataCell>
                         <div className="small text-center">
-                          <span>{item.roles}</span>
+                          <span>{item.majorRole}</span>
                         </div>
                       </CTableDataCell>
                       <CTableDataCell>
