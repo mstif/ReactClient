@@ -72,11 +72,14 @@ const User = () => {
     password: '',
     confirmPassword: '',
     approved: true,
+    statusMessage: '',
   }
   const [item, setItem] = useState(initItem)
   const [isLoading, setLooding] = useState(false)
   const [isModified, setModified] = useState(false)
   const [role, setRole] = useState('')
+  const currentRoles = localStorage.getItem('roles')
+  const isAdmin = currentRoles.includes('Administrator')
   const params = useParams()
   const getApiData = async () => {
     const itemId = params.id
@@ -178,39 +181,72 @@ const User = () => {
         </CCol>
       </CRow>
       <CRow className="mb-3">
-        <CCol sm={3}>Роль</CCol>
-        <CCol sm={3}>
-          <CFormCheck
-            type="radio"
-            id="Logist"
-            value="Logist"
-            name="Role"
-            label="Логист"
-            checked={role == 'Logist'}
-            onChange={handleChange}
-          />
-          <CFormCheck
-            type="radio"
-            id="Customer"
-            value="Customer"
-            label="Продавец"
-            name="Role"
-            checked={role == 'Customer'}
-            onChange={handleChange}
-          />
-          <CFormCheck
-            type="radio"
-            id="Administrator"
-            value="Administrator"
-            checked={role == 'Administrator'}
-            name="Role"
-            label="Администратор"
-            onChange={handleChange}
+        <CCol sm={3}>Пароль</CCol>
+        <CCol sm={9}>
+          <CFormInput
+            type="text"
+            placeholder="Пароль"
+            value={cs(item.password)}
+            name="password"
+            onChange={handler}
           />
         </CCol>
       </CRow>
       <CRow className="mb-3">
-        <CCol sm={3}>Пароль</CCol>
+        <CCol sm={3}>Подтверждение</CCol>
+        <CCol sm={9}>
+          <CFormInput
+            type="text"
+            placeholder="Подтверждение пароля"
+            value={cs(item.confirmPassword)}
+            name="confirmPassword"
+            onChange={handler}
+          />
+        </CCol>
+      </CRow>
+      <CRow className="mb-3" disabled>
+        <CCol sm={3}>Роль</CCol>
+        <CCol sm={3}>
+          {isAdmin ? (
+            <>
+              <CFormCheck
+                type="radio"
+                id="Logist"
+                value="Logist"
+                name="Role"
+                label="Логист"
+                checked={role == 'Logist'}
+                onChange={handleChange}
+                disabled={!isAdmin}
+              />
+              <CFormCheck
+                type="radio"
+                id="Customer"
+                value="Customer"
+                label="Продавец"
+                name="Role"
+                checked={role == 'Customer'}
+                onChange={handleChange}
+                disabled={!isAdmin}
+              />
+              <CFormCheck
+                type="radio"
+                id="Administrator"
+                value="Administrator"
+                checked={role == 'Administrator'}
+                name="Role"
+                label="Администратор"
+                onChange={handleChange}
+                disabled={!isAdmin}
+              />
+            </>
+          ) : (
+            item.majorRole
+          )}
+        </CCol>
+      </CRow>
+      <CRow className="mb-3">
+        <CCol sm={3}>Компания</CCol>
         <CCol sm={9}>
           <CFormSelect
             aria-label="Default select example"
@@ -224,14 +260,21 @@ const User = () => {
       <CRow className="mb-3">
         <CCol sm={3}>Статус</CCol>
         <CCol sm={9}>
-          <CFormCheck
-            type="checkbox"
-            id="isApproved"
-            checked={item.approved}
-            label="Активен"
-            name="approved"
-            onChange={handler}
-          />
+          {isAdmin ? (
+            <CFormCheck
+              type="checkbox"
+              id="isApproved"
+              checked={item.approved}
+              label="Активен"
+              name="approved"
+              onChange={handler}
+              disabled={!isAdmin}
+            />
+          ) : item.approved ? (
+            'Активен'
+          ) : (
+            'Отключен'
+          )}
         </CCol>
       </CRow>
       <CRow className="mb-3">
@@ -251,9 +294,9 @@ const User = () => {
             ></CIcon>
           )}
         </CCol>
-        {/*<CCol sm={1}>*/}
-        {/*  <CSpinner color="primary" variant="grow" className={isLoading ? '' : 'd-none'} />*/}
-        {/*</CCol>*/}
+        <CCol className="small" sm={8}>
+          {item.statusMessage}
+        </CCol>
       </CRow>
     </>
   )

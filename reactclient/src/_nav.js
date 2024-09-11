@@ -16,7 +16,7 @@ import {
   cilCog,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-
+const idUser = localStorage.getItem('userId')
 const _nav = [
   {
     component: CNavItem,
@@ -47,7 +47,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Профиль',
-    to: '/theme/typography',
+    to: '/user/' + idUser,
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
   {

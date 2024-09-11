@@ -20,6 +20,7 @@ function ProtectedRoutes() {
             return response.json();
         }).then(data => {
           localStorage.setItem("user", data.user.user.email);
+          localStorage.setItem("userId", data.user.user.id);
           localStorage.setItem("roles", data.user.roles);
             console.log(data.user);
         }).catch(err => {
@@ -27,6 +28,7 @@ function ProtectedRoutes() {
             setWaiting(false);
           localStorage.removeItem("user");
           localStorage.removeItem("roles");
+          localStorage.removeItem("userId");
         });
     }, []);
 
