@@ -2,6 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 import { useState, useEffect, Suspense } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import Select from 'react-select'
 import {
   CAvatar,
   CButton,
@@ -77,9 +78,13 @@ const User = () => {
   const [item, setItem] = useState(initItem)
   const [isLoading, setLooding] = useState(false)
   const [isModified, setModified] = useState(false)
+
+  const [options, setOptions] = useState([])
+  
   const [role, setRole] = useState('')
   const currentRoles = localStorage.getItem('roles')
   const isAdmin = currentRoles.includes('Administrator')
+
   const params = useParams()
   const getApiData = async () => {
     const itemId = params.id
@@ -120,7 +125,27 @@ const User = () => {
   const handleChange = (e) => {
     setRole(e.target.value)
   }
-
+  const handleCompany = (e) => {
+    const { target } = e
+  }
+  const handleInput = (e) => {
+    if (e.length >= 3) {
+      var query = '/api/Contragent/list-contragents?Name=' + e + '&IsAlive=true&NotActive=false'
+      const response = fetch(query, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((commits) => fill(commits))
+    }
+  }
+  function fill(commits) {
+    var t = commits.map((f) => ({ ['value']: f.id, ['label']: f.name }))
+    setOptions(t)
+  }
   const handler = (e) => {
     const { target } = e
     const value = target.type === 'checkbox' ? target.checked : target.value
@@ -248,13 +273,14 @@ const User = () => {
       <CRow className="mb-3">
         <CCol sm={3}>Компания</CCol>
         <CCol sm={9}>
-          <CFormSelect
-            aria-label="Default select example"
-            options={[]}
-            onChange={handler}
-            name="allCompanies"
-            value={''}
-          />
+          {/*<CFormSelect*/}
+          {/*  aria-label="Default select example"*/}
+          {/*  options={[]}*/}
+          {/*  onChange={handler}*/}
+          {/*  name="allCompanies"*/}
+          {/*  value={''}*/}
+          {/*/>*/}
+          <Select options={options} onChange={handleCompany} onInputChange={handleInput} />
         </CCol>
       </CRow>
       <CRow className="mb-3">
