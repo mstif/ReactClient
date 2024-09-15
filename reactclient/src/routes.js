@@ -9,6 +9,9 @@ const OpenMap1 = React.lazy(() => import('./map/OpenMap'))
 const UserList = React.lazy(() => import('./views/entyties/UserList'))
 const User = React.lazy(() => import('./views/entyties/User'))
 const Settings = React.lazy(() => import('./views/dashboard/Settings'))
+const OrderList = React.lazy(() => import('./views/entyties/OrderList'))
+const Order = React.lazy(() => import('./views/entyties/Order'))
+
 ///
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -76,6 +79,9 @@ const routes = [
   { path: '/user/:id', name: 'Профиль пользователя', element: User },
   { path: '/settings', name: 'Настройки', element: Settings },
   { path: '/settings/userlist', name: 'Пользователи', element: UserList },
+  { path: '/orders', name: 'Заказы', element: OrderList },
+  { path: '/order/:id', name: 'Заказ', element: Order },
+  { path: '/order', name: 'Заказ', element: Order },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

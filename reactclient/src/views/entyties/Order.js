@@ -2,7 +2,12 @@ import React from 'react'
 import classNames from 'classnames'
 import { useState, useEffect, Suspense } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
+import { registerLocale, setDefaultLocale } from 'react-datepicker'
+import { ru } from 'date-fns/locale/ru'
+registerLocale('ru', ru)
 import {
   CAvatar,
   CButton,
@@ -49,6 +54,7 @@ import {
   cilUserFemale,
   cilCheckAlt,
   cilPencil,
+  cilLocationPin,
 } from '@coreui/icons'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
@@ -61,43 +67,58 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 
-const User = () => {
+const Order = () => {
   const initItem = {
-    userName: '',
-    company: '',
-    roles: [],
-    majorRole: '',
-    email: '',
-    id: 'new',
-    fullName: '',
-    password: '',
-    confirmPassword: '',
-    approved: true,
-    statusMessage: '',
+    address: '',
+    clientCompany: false,
+    comment: '',
+    country: 1,
+    deliveryPoint: false,
+    logisticCompany: false,
+    id: 0,
+    inn: '',
+    isAlive: true,
+    latitude: '',
+    longitude: '',
+    name: '',
   }
   const [item, setItem] = useState(initItem)
   const [isLoading, setLooding] = useState(false)
   const [isModified, setModified] = useState(false)
-
+  const [startDate, setStartDate] = useState(new Date())
+  const [departDate, setDepartDate] = useState(new Date())
   const [optionsC, setOptions] = useState([])
   const [selectedOption, setSelectedOption] = useState(null)
-  const [role, setRole] = useState('')
-  const currentRoles = localStorage.getItem('roles')
-  const isAdmin = currentRoles.includes('Administrator')
-
+  const [optionsLogist, setOptionsLogist] = useState([])
+  const [selectedOptionLogist, setSelectedOptionLogist] = useState(null)
   const params = useParams()
   const getApiData = async () => {
     const itemId = params.id
-    const response = await fetch('/api/securewebsite/' + itemId, {
+    var query = 'api/Order/EditOrder?id=' + itemId
+    if (itemId == 0) {
+      query = 'api/Order/CreateOrder'
+    }
+    const response = await fetch(query, {
       method: 'GET',
       credentials: 'include',
     })
       .then((response) => response.json())
       .then((res) => {
-        setOptions([{ value: res.companyId, label: res.company }])
-        setSelectedOption({ value: res.companyId, label: res.company })
+        setOptions([{ value: res.seller.id, label: res.seller.title }])
+        setSelectedOption({ value: res.seller.id, label: res.seller.title })
+        setOptionsLogist([
+          res.logisticCompany != null
+            ? { value: res.logisticCompany.id, label: res.logisticCompany.title }
+            : {},
+        ])
+        setSelectedOptionLogist(
+          res.logisticCompany != null
+            ? { value: res.logisticCompany.id, label: res.logisticCompany.title }
+            : {},
+        )
         setItem(res)
-        setRole(res.majorRole)
+        setStartDate(new Date(res.date))
+        setDepartDate(new Date(res.dateDeparture))
       })
   }
 
@@ -107,11 +128,7 @@ const User = () => {
 
   const saveData = async () => {
     if (isLoading) return
-    item.majorRole = role
-    let query = '/api/securewebsite/save-user-full'
-    //if (item.id > 0) {
-    //  query = '/api/Contragent/update'
-    //}
+    let query = '/api/Order/save-order'
     setLooding(true)
     const response = await fetch(query, {
       method: 'POST',
@@ -126,14 +143,38 @@ const User = () => {
     setLooding(false)
   }
 
+  const handler = (e) => {
+    const { target } = e
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    const { name } = target
+    setItem((f) => ({ ...f, [name]: value }))
+    setModified(true)
+  }
+
   const handleChange = (e) => {
     setRole(e.target.value)
   }
   const handleCompany = (e) => {
     setSelectedOption(e)
-    setItem((f) => ({ ...f, ['companyId']: e.value, ['company']: e.label }))
+    setItem((f) => ({ ...f, ['seller']: { ['id']: e.value, ['title']: e.label } }))
     setModified(true)
   }
+  const handleCompanyLogist = (e) => {
+    setSelectedOptionLogist(e)
+    setItem((f) => ({ ...f, ['logisticCompany']: { ['id']: e.value, ['title']: e.label } }))
+    setModified(true)
+  }
+  const handleDateDoc = (e) => {
+    setStartDate(e)
+    setItem((f) => ({ ...f, ['date']: e }))
+    setModified(true)
+  }
+  const handleDateDep = (e) => {
+    setDepartDate(e)
+    setItem((f) => ({ ...f, ['dateDeparture']: e }))
+    setModified(true)
+  }
+
   const handleInput = (e) => {
     if (e.length >= 3) {
       var query =
@@ -149,18 +190,32 @@ const User = () => {
         .then((commits) => fill(commits))
     }
   }
+
   function fill(commits) {
     var t = commits.map((f) => ({ ['value']: f.id, ['label']: f.name }))
     setOptions(t)
   }
-  const handler = (e) => {
-    const { target } = e
-    const value = target.type === 'checkbox' ? target.checked : target.value
-    const { name } = target
-    setItem((f) => ({ ...f, [name]: value }))
-    setModified(true)
+
+  const handleInputLogist = (e) => {
+    if (e.length >= 3) {
+      var query =
+        '/api/Contragent/list-contragents?Name=' + e + '&IsAlive=true&NotActiveFilter=false'
+      const response = fetch(query, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((commits) => fillLogist(commits))
+    }
   }
 
+  function fillLogist(commits) {
+    var t = commits.map((f) => ({ ['value']: f.id, ['label']: f.name }))
+    setOptionsLogist(t)
+  }
   const cs = (val) => {
     if (val == null) return ''
     else return val
@@ -173,112 +228,43 @@ const User = () => {
   return (
     <>
       <CRow className="mb-3">
-        <CCol sm={3}>Код</CCol>
-        <CCol sm={9}>{item.id}</CCol>
+        <CCol sm={3}>Дата</CCol>
+        <CCol sm={9}>
+          <DatePicker
+            locale="ru"
+            selected={startDate}
+            onChange={(date) => handleDateDoc(date)}
+            dateFormat="dd.MM.YYYY HH:MM"
+            showTimeSelect
+          />
+        </CCol>
       </CRow>
       <CRow className="mb-3">
-        <CCol sm={3}>Логин</CCol>
+        <CCol sm={3}>Номер</CCol>
         <CCol sm={9}>
           <CFormInput
             type="text"
-            placeholder="Логин"
-            value={cs(item.userName)}
-            name="userName"
+            placeholder="Номер"
+            value={cs(item.number)}
+            name="name"
             onChange={handler}
           />
         </CCol>
       </CRow>
       <CRow className="mb-3">
-        <CCol sm={3}>Email</CCol>
+        <CCol sm={3}>Логистическая компания</CCol>
         <CCol sm={9}>
-          <CFormInput
-            type="text"
-            placeholder="Email"
-            value={cs(item.email)}
-            name="email"
-            onChange={handler}
+          <Select
+            options={optionsLogist}
+            onChange={handleCompanyLogist}
+            value={selectedOptionLogist}
+            onInputChange={handleInputLogist}
           />
         </CCol>
       </CRow>
       <CRow className="mb-3">
-        <CCol sm={3}>Полное имя</CCol>
-        <CCol sm={9}>
-          <CFormInput
-            type="text"
-            placeholder="Полное имя"
-            value={cs(item.fullName)}
-            name="fullName"
-            onChange={handler}
-          />
-        </CCol>
-      </CRow>
-      <CRow className="mb-3">
-        <CCol sm={3}>Пароль</CCol>
-        <CCol sm={9}>
-          <CFormInput
-            type="text"
-            placeholder="Пароль"
-            value={cs(item.password)}
-            name="password"
-            onChange={handler}
-          />
-        </CCol>
-      </CRow>
-      <CRow className="mb-3">
-        <CCol sm={3}>Подтверждение</CCol>
-        <CCol sm={9}>
-          <CFormInput
-            type="text"
-            placeholder="Подтверждение пароля"
-            value={cs(item.confirmPassword)}
-            name="confirmPassword"
-            onChange={handler}
-          />
-        </CCol>
-      </CRow>
-      <CRow className="mb-3" disabled>
-        <CCol sm={3}>Роль</CCol>
-        <CCol sm={3}>
-          {isAdmin ? (
-            <>
-              <CFormCheck
-                type="radio"
-                id="Logist"
-                value="Logist"
-                name="Role"
-                label="Логист"
-                checked={role == 'Logist'}
-                onChange={handleChange}
-                disabled={!isAdmin}
-              />
-              <CFormCheck
-                type="radio"
-                id="Customer"
-                value="Customer"
-                label="Продавец"
-                name="Role"
-                checked={role == 'Customer'}
-                onChange={handleChange}
-                disabled={!isAdmin}
-              />
-              <CFormCheck
-                type="radio"
-                id="Administrator"
-                value="Administrator"
-                checked={role == 'Administrator'}
-                name="Role"
-                label="Администратор"
-                onChange={handleChange}
-                disabled={!isAdmin}
-              />
-            </>
-          ) : (
-            item.majorRole
-          )}
-        </CCol>
-      </CRow>
-      <CRow className="mb-3">
-        <CCol sm={3}>Компания</CCol>
+        <CCol sm={3}>Заказчик доставки</CCol>
+
         <CCol sm={9}>
           {/*<CFormSelect*/}
           {/*  aria-label="Default select example"*/}
@@ -296,25 +282,21 @@ const User = () => {
         </CCol>
       </CRow>
       <CRow className="mb-3">
-        <CCol sm={3}>Статус</CCol>
+        <CCol sm={3}>Дата доставки</CCol>
         <CCol sm={9}>
-          {isAdmin ? (
-            <CFormCheck
-              type="checkbox"
-              id="isApproved"
-              checked={item.approved}
-              label="Активен"
-              name="approved"
-              onChange={handler}
-              disabled={!isAdmin}
-            />
-          ) : item.approved ? (
-            'Активен'
-          ) : (
-            'Отключен'
-          )}
+          <DatePicker
+            locale="ru"
+            selected={departDate}
+            onChange={(date) => handleDateDep(date)}
+            dateFormat="dd.MM.YYYY"
+          />
         </CCol>
       </CRow>
+      <CRow className="mb-3">
+        <CCol sm={3}>Статус</CCol>
+        <CCol sm={9}>{cs(item.status)}</CCol>
+      </CRow>
+
       <CRow className="mb-3">
         <CCol sm={3}>
           <CButton onClick={saveData} className="btn btn-primary">
@@ -332,11 +314,11 @@ const User = () => {
             ></CIcon>
           )}
         </CCol>
-        <CCol className="small" sm={8}>
-          {item.statusMessage}
-        </CCol>
+        {/*<CCol sm={1}>*/}
+        {/*  <CSpinner color="primary" variant="grow" className={isLoading ? '' : 'd-none'} />*/}
+        {/*</CCol>*/}
       </CRow>
     </>
   )
 }
-export default User
+export default Order

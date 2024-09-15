@@ -48,6 +48,7 @@ import {
   cilUserFemale,
   cilCheckAlt,
   cilPencil,
+  cilLocationPin,
 } from '@coreui/icons'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
@@ -88,7 +89,13 @@ const Contragent = () => {
 
     setItem(response)
   }
-
+  const fillCoord = async () => {
+    //const response = await fetch('/api/Contragent/' + itemId, {
+    //  method: 'GET',
+    //  credentials: 'include',
+    //}).then((response) => response.json())
+    //setItem(response)
+  }
   useEffect(() => {
     getApiData()
   }, [])
@@ -237,6 +244,11 @@ const Contragent = () => {
             name="longitude"
             onChange={handler}
           />
+        </CCol>
+        <CCol sm={1}>
+          <CButton onClick={fillCoord} variant="outline" color="secondary">
+            <CIcon className="text-success" icon={cilLocationPin}></CIcon> 
+          </CButton>
         </CCol>
       </CRow>
       <CRow className="mb-3">

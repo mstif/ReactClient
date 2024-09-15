@@ -37,7 +37,6 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 export default defineConfig(() => {
   return {
     plugins: [plugin()],
-  
     server: {
       proxy: {
         '^/weatherforecast': {
@@ -82,6 +81,7 @@ export default defineConfig(() => {
     },
 
     resolve: {
+      mainFields: [],
       alias: [
         {
           find: 'src/',
