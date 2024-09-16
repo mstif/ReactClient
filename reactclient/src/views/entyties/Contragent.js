@@ -247,7 +247,7 @@ const Contragent = () => {
         </CCol>
         <CCol sm={1}>
           <CButton onClick={fillCoord} variant="outline" color="secondary">
-            <CIcon className="text-success" icon={cilLocationPin}></CIcon> 
+            <CIcon className="text-success" icon={cilLocationPin}></CIcon>
           </CButton>
         </CCol>
       </CRow>

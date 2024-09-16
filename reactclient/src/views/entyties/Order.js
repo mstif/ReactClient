@@ -29,6 +29,10 @@ import {
   CFormCheck,
   CFormSelect,
   CSpinner,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -228,6 +232,18 @@ const Order = () => {
   return (
     <>
       <CRow className="mb-3">
+        <CCol sm={2}>
+          <CDropdown>
+            <CDropdownToggle color="secondary">Действия с заказом:</CDropdownToggle>
+            <CDropdownMenu>
+              <CDropdownItem href="#">Action</CDropdownItem>
+              <CDropdownItem href="#">Another action</CDropdownItem>
+              <CDropdownItem href="#">Something else here</CDropdownItem>
+            </CDropdownMenu>
+          </CDropdown>
+        </CCol>
+      </CRow>
+      <CRow className="mb-3">
         <CCol sm={3}>Дата</CCol>
         <CCol sm={9}>
           <DatePicker
@@ -314,6 +330,7 @@ const Order = () => {
             ></CIcon>
           )}
         </CCol>
+
         {/*<CCol sm={1}>*/}
         {/*  <CSpinner color="primary" variant="grow" className={isLoading ? '' : 'd-none'} />*/}
         {/*</CCol>*/}
