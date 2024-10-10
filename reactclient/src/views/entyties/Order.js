@@ -85,6 +85,7 @@ const Order = () => {
     latitude: '',
     longitude: '',
     name: '',
+    availableActions: [{ id: '', title: '' }],
   }
   const [item, setItem] = useState(initItem)
   const [isLoading, setLooding] = useState(false)
@@ -96,8 +97,8 @@ const Order = () => {
   const [optionsLogist, setOptionsLogist] = useState([])
   const [selectedOptionLogist, setSelectedOptionLogist] = useState(null)
   const params = useParams()
-  const getApiData = async () => {
-    const itemId = params.id
+  const getApiData = async (id) => {
+    const itemId = id
     var query = 'api/Order/EditOrder?id=' + itemId
     if (itemId == 0) {
       query = 'api/Order/CreateOrder'
@@ -127,7 +128,7 @@ const Order = () => {
   }
 
   useEffect(() => {
-    getApiData()
+    getApiData(params.id)
   }, [])
 
   const saveData = async () => {
@@ -142,8 +143,10 @@ const Order = () => {
       },
       body: JSON.stringify(item),
     }).then((response) => response.json())
-    setItem(response)
+    //setItem(response)
+    await getApiData(response.id)
     setModified(false)
+
     setLooding(false)
   }
 
@@ -229,6 +232,42 @@ const Order = () => {
     else return val
   }
 
+  const handleActionsChange = async (e) => {
+    if (e.target.text == 'Предложить лог. компании') {
+      var param = { orderId: item.id, logistic: item.logisticCompany.id }
+      const response = await fetch(
+        '/api/Order/make-offer-tologistic?orderId=' + param.orderId + '&logistic=' + param.logistic,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(param),
+        },
+      ).then((response) => response.json())
+      await getApiData(param.orderId)
+      //setItem(response)
+      setModified(false)
+      setLooding(false)
+    }
+    if (e.target.text == 'Отозвать предложение лог. компании') {
+      var param = { orderId: item.id }
+      const response = await fetch('/api/Order/cancel-offer-tologistic?orderId=' + param.orderId, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(param),
+      }).then((response) => response.json())
+      await getApiData(param.orderId)
+      //setItem(response)
+      setModified(false)
+      setLooding(false)
+    }
+  }
+
   return (
     <>
       <CRow className="mb-3">
@@ -236,9 +275,11 @@ const Order = () => {
           <CDropdown>
             <CDropdownToggle color="secondary">Действия с заказом:</CDropdownToggle>
             <CDropdownMenu>
-              <CDropdownItem href="#">Action</CDropdownItem>
-              <CDropdownItem href="#">Another action</CDropdownItem>
-              <CDropdownItem href="#">Something else here</CDropdownItem>
+              {item.availableActions.map((a) => (
+                <CDropdownItem key={a.id} onClick={handleActionsChange}>
+                  {a.title}
+                </CDropdownItem>
+              ))}
             </CDropdownMenu>
           </CDropdown>
         </CCol>
