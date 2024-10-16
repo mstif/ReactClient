@@ -70,7 +70,7 @@ const ActiveOrders = () => {
   const [items, setItems] = useState([])
   const [filters, setFilters] = useState({ ['itemsPerPage']: 20, ['page']: 1 })
   const getApiData = async () => {
-    const response = await fetch('/api/Order/list-orders', {
+    const response = await fetch('/api/Order/list-orders-dashboard', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -135,7 +135,7 @@ const ActiveOrders = () => {
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Заказы</CCardHeader>
+            <CCardHeader>Активные заказы</CCardHeader>
             <CCardBody>
               <CNav variant="pills" className="card-header-pills">
                 <CNavItem>
@@ -168,12 +168,13 @@ const ActiveOrders = () => {
                     <CTableHeaderCell className="d-none"></CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary"></CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Статус</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Дата</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Номер</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Отправитель</CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Доставка</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Заказ</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Дата доставки</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Вес</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Расстояние</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">
+                      Миним. стоимость
+                    </CTableHeaderCell>
 
                     <CTableHeaderCell className="bg-body-tertiary">Действия</CTableHeaderCell>
                   </CTableRow>
@@ -186,31 +187,17 @@ const ActiveOrders = () => {
                         <CFormCheck id={'chk' + index} onClick={handler} />
                       </CTableDataCell>
                       <CTableDataCell className="small">{item.status}</CTableDataCell>
+                      <CTableDataCell className="small">{item.title}</CTableDataCell>
                       <CTableDataCell className="small">
-                        <Moment format="DD.MM.YY HH:MM">{item.date}</Moment>
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="small">{item.number}</div>
-                        <div className="small text-body-secondary text-nowrap">
-                          <span className="small">
-                            {/*{item.clientCompany*/}
-                            {/*  ? 'Продавец '*/}
-                            {/*  : '' + item.logisticCompany*/}
-                            {/*    ? 'Логист '*/}
-                            {/*    : '' + item.deliveryPoint*/}
-                            {/*      ? 'Точка доставки'*/}
-                            {/*      : ''}*/}
-                          </span>
-                        </div>
-                      </CTableDataCell>
-                      <CTableDataCell className="small">{item.seller.title}</CTableDataCell>
-                      <CTableDataCell>
                         <div className="small">
                           <Moment format="DD.MM.YY">{item.dateDeparture}</Moment>
                         </div>
                       </CTableDataCell>
                       <CTableDataCell className="small">{item.totalWeight}</CTableDataCell>
                       <CTableDataCell className="small">{item.totalDistance}</CTableDataCell>
+                      <CTableDataCell className="small">
+                        {item.logisticOffers.length ? item.logisticOffers[0].amount : ''}
+                      </CTableDataCell>
                       <CTableDataCell>
                         <CButton
                           color="primary"

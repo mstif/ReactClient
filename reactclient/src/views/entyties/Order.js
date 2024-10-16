@@ -93,6 +93,8 @@ const Order = () => {
   const [startDate, setStartDate] = useState(new Date())
   const [departDate, setDepartDate] = useState(new Date())
   const [optionsC, setOptions] = useState([])
+  const [optionsCargoType, setOptionsCargoType] = useState([])
+  const [selectedOptionCargoType, setSelectedOptionCargoType] = useState(null)
   const [selectedOption, setSelectedOption] = useState(null)
   const [optionsLogist, setOptionsLogist] = useState([])
   const [selectedOptionLogist, setSelectedOptionLogist] = useState(null)
@@ -109,18 +111,20 @@ const Order = () => {
     })
       .then((response) => response.json())
       .then((res) => {
-        setOptions([{ value: res.seller.id, label: res.seller.title }])
-        setSelectedOption({ value: res.seller.id, label: res.seller.title })
+        setOptions([{ value: res.seller?.id, label: res.seller?.title }])
+        setSelectedOption({ value: res.seller?.id, label: res.seller?.title })
         setOptionsLogist([
           res.logisticCompany != null
-            ? { value: res.logisticCompany.id, label: res.logisticCompany.title }
+            ? { value: res.logisticCompany?.id, label: res.logisticCompany?.title }
             : {},
         ])
         setSelectedOptionLogist(
           res.logisticCompany != null
-            ? { value: res.logisticCompany.id, label: res.logisticCompany.title }
+            ? { value: res.logisticCompany?.id, label: res.logisticCompany?.title }
             : {},
         )
+        setOptionsCargoType([{ value: res.cargoType?.id, label: res.cargoType?.title }])
+        setSelectedOptionCargoType([{ value: res.cargoType?.id, label: res.cargoType?.title }])
         setItem(res)
         setStartDate(new Date(res.date))
         setDepartDate(new Date(res.dateDeparture))
@@ -197,12 +201,33 @@ const Order = () => {
         .then((commits) => fill(commits))
     }
   }
-
+  const handleInputCargoType = (e) => {
+    if (e.length >= 3) {
+      var query = '/api/CargoType/list-cargotypes?search=' + e
+      const response = fetch(query, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((commits) => fillCargoTypes(commits))
+    }
+  }
+  const handleCargoType = (e) => {
+    setSelectedOptionCargoType(e)
+    setItem((f) => ({ ...f, ['cargoType']: { ['id']: e.value, ['title']: e.label } }))
+    setModified(true)
+  }
   function fill(commits) {
     var t = commits.map((f) => ({ ['value']: f.id, ['label']: f.name }))
     setOptions(t)
   }
-
+  function fillCargoTypes(commits) {
+    var t = commits.map((f) => ({ ['value']: f.id, ['label']: f.name }))
+    setOptionsCargoType(t)
+  }
   const handleInputLogist = (e) => {
     if (e.length >= 3) {
       var query =
@@ -288,6 +313,7 @@ const Order = () => {
         <CCol sm={3}>Дата</CCol>
         <CCol sm={9}>
           <DatePicker
+            className="form-control"
             locale="ru"
             selected={startDate}
             onChange={(date) => handleDateDoc(date)}
@@ -342,10 +368,30 @@ const Order = () => {
         <CCol sm={3}>Дата доставки</CCol>
         <CCol sm={9}>
           <DatePicker
+            className="form-control"
             locale="ru"
             selected={departDate}
             onChange={(date) => handleDateDep(date)}
             dateFormat="dd.MM.YYYY"
+          />
+        </CCol>
+      </CRow>
+      <CRow className="mb-3">
+        <CCol sm={3}>Тип груза</CCol>
+
+        <CCol sm={9}>
+          {/*<CFormSelect*/}
+          {/*  aria-label="Default select example"*/}
+          {/*  options={[]}*/}
+          {/*  onChange={handler}*/}
+          {/*  name="allCompanies"*/}
+          {/*  value={''}*/}
+          {/*/>*/}
+          <Select
+            options={optionsCargoType}
+            onChange={handleCargoType}
+            value={selectedOptionCargoType}
+            onInputChange={handleInputCargoType}
           />
         </CCol>
       </CRow>

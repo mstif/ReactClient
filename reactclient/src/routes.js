@@ -11,7 +11,7 @@ const User = React.lazy(() => import('./views/entyties/User'))
 const Settings = React.lazy(() => import('./views/dashboard/Settings'))
 const OrderList = React.lazy(() => import('./views/entyties/OrderList'))
 const Order = React.lazy(() => import('./views/entyties/Order'))
-
+const ActiveOrders = React.lazy(() => import('./views/entyties/ActiveOrders'))
 ///
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -82,6 +82,7 @@ const routes = [
   { path: '/orders', name: 'Заказы', element: OrderList },
   { path: '/order/:id', name: 'Заказ', element: Order },
   { path: '/order', name: 'Заказ', element: Order },
+  { path: '/active-orders', name: 'Активные заказы', element: ActiveOrders },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
