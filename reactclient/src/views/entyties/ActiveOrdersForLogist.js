@@ -1,27 +1,17 @@
+import React from 'react'
+import classNames from 'classnames'
+import { useState, useEffect } from 'react'
+import Moment from 'react-moment'
 import {
-  cilHandPointLeft,
-  cilLocationPin,
-  cilPencil,
-  cilPlus,
-  cilTrash,
-  cilSpreadsheet,
-} from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
-import {
+  CAvatar,
   CButton,
+  CButtonGroup,
   CCard,
   CCardBody,
+  CCardFooter,
   CCardHeader,
   CCol,
-  CFormCheck,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CNav,
-  CNavItem,
-  CNavLink,
+  CProgress,
   CRow,
   CTable,
   CTableBody,
@@ -29,20 +19,61 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CFormCheck,
+  CNavLink,
+  CNavItem,
+  CNav,
 } from '@coreui/react'
-import React, { useEffect, useState } from 'react'
-import Moment from 'react-moment'
-import { Link } from 'react-router-dom'
+import CIcon from '@coreui/icons-react'
+import {
+  cibCcAmex,
+  cibCcApplePay,
+  cibCcMastercard,
+  cibCcPaypal,
+  cibCcStripe,
+  cibCcVisa,
+  cibGoogle,
+  cibFacebook,
+  cibLinkedin,
+  cifBr,
+  cifEs,
+  cifFr,
+  cifIn,
+  cifPl,
+  cifUs,
+  cifRu,
+  cilTrash,
+  cilPencil,
+  cibTwitter,
+  cilCloudDownload,
+  cilPeople,
+  cilUser,
+  cilUserFemale,
+  cilTranslate,
+  cilPlus,
+  cilLocationPin,
+  cilCircle,
+} from '@coreui/icons'
+import { Link, useLocation } from 'react-router-dom'
+import avatar1 from 'src/assets/images/avatars/1.jpg'
+import avatar2 from 'src/assets/images/avatars/2.jpg'
+import avatar3 from 'src/assets/images/avatars/3.jpg'
+import avatar4 from 'src/assets/images/avatars/4.jpg'
+import avatar5 from 'src/assets/images/avatars/5.jpg'
+import avatar6 from 'src/assets/images/avatars/6.jpg'
+
+import WidgetsBrand from '../widgets/WidgetsBrand'
+import WidgetsDropdown from '../widgets/WidgetsDropdown'
+import OpenMap1 from '../../map/OpenMap'
 
 const ActiveOrders = () => {
   const [items, setItems] = useState([])
   const [filters, setFilters] = useState({ ['itemsPerPage']: 20, ['page']: 1 })
   const [offers, setOffers] = useState([])
-  const [currentOrder, setCurrentOrder] = useState({ logisticOffers: [] })
   const roles = localStorage.getItem('roles')
   let settingsUser = localStorage.getItem('settingsUser')
   let CompanyId = 0
-  if (settingsUser != undefined && settingsUser != 'null') {
+  if (settingsUser != undefined) {
     CompanyId = JSON.parse(settingsUser).CompanyId
   }
   const isAdmin = roles.includes('Administrator')
@@ -82,29 +113,7 @@ const ActiveOrders = () => {
       credentials: 'include',
     }).then((response) => getApiData())
   }
-  const chooseCompany = (order) => {
-    setCurrentOrder(order)
-    setVisible(!visible)
-  }
-  const choose = (offerId) => {
-    acceptOfferApi(offerId)
-  }
-  const acceptOffer = () => {
-    var table = document.getElementById('tab1')
-    let offerId = ''
-    for (var i = 1, row; (row = table.rows[i]); i++) {
-      if (row.cells[1].firstChild.checked) {
-        offerId = row.cells[0].firstChild.data
-        break
-      }
-    }
-    acceptOfferApi(offerId)
-  }
 
-  const acceptOfferApi = (offerId) => {
-    if (offerId != '') {
-    }
-  }
   const toMap = () => {
     window.open('#/openmap', '_blank').focus()
   }
@@ -126,39 +135,6 @@ const ActiveOrders = () => {
             name: invoice.deliveryPoint.name,
           })
         }
-
-        //setPoints(points)
-      }
-
-      //iterate through rows
-      //rows would be accessed using the "row" variable assigned in the for loop
-      //for (var j = 0, col; (col = row.cells[j]); j++) {
-      //  //iterate through columns
-      //  //columns would be accessed using the "col" variable assigned in the for loop
-      //}
-    }
-  }
-  const getTotalCostOrder = (item) => {
-    let res =
-      item.deliveryContract == null
-        ? isSeller || isAdmin
-          ? item.logisticOffers.length
-            ? item.logisticOffers[0].amount
-            : ''
-          : logistCosts.find((s) => s != undefined && s.orderId == item.id)?.amount
-        : item.deliveryContract.totalCostDelivery
-
-    return res
-  }
-
-  const handler1 = (e) => {
-    var table = document.getElementById('tab1')
-
-    for (var i = 1, row; (row = table.rows[i]); i++) {
-      let offerId = row.cells[0].firstChild.data
-      if (e.target.id == 'chk1' + offerId) continue
-      if (row.cells[1].firstChild.checked) {
-        row.cells[1].firstChild.checked = false
 
         //setPoints(points)
       }
@@ -219,8 +195,9 @@ const ActiveOrders = () => {
                     <CTableHeaderCell className="bg-body-tertiary">Вес</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Расстояние</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">
-                      {isSeller || isAdmin ? 'Предложения' : 'Стоимость'}
+                      {isSeller || isAdmin ? 'Предложения компаний' : 'Стоимость'}
                     </CTableHeaderCell>
+
                     <CTableHeaderCell className="bg-body-tertiary">Действия</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
@@ -241,33 +218,15 @@ const ActiveOrders = () => {
                       <CTableDataCell className="small">{item.totalWeight}</CTableDataCell>
                       <CTableDataCell className="small">{item.totalDistance}</CTableDataCell>
                       <CTableDataCell className="small">
-                        <CNavLink
-                          //href="#"
-                          className={'text-primary m-2 font-weight-bold '}
-                          onClick={() => chooseCompany(item)}
-                        >
-                          {item.deliveryContract == null
-                            ? isSeller || isAdmin
-                              ? item.logisticOffers.length
-                                ? item.status == 'Новый'
-                                  ? item.logisticOffers[0].amount
-                                  : item.logisticOffers.find(
-                                      (l) => l.logisticCompany.id == item.logisticCompany.id,
-                                    )?.amount
-                                : ''
-                              : logistCosts.find((s) => s != undefined && s.orderId == item.id)
-                                  ?.amount
-                            : item.deliveryContract.totalCostDelivery}
+                        <CNavLink href="#" className={'text-primary m-2 font-weight-bold '}>
+                          {isSeller || isAdmin
+                            ? item.logisticOffers.length
+                              ? item.logisticOffers[0].amount
+                              : ''
+                            : logistCosts.find((s) => s.orderId == item.id).amount}
                         </CNavLink>
                       </CTableDataCell>
                       <CTableDataCell>
-                        <CButton
-                          color="primary"
-                          variant="ghost"
-                          onClick={() => chooseCompany(item)}
-                        >
-                          <CIcon size="sm" icon={cilSpreadsheet}></CIcon>
-                        </CButton>
                         <CButton
                           color="primary"
                           variant="ghost"
@@ -275,7 +234,11 @@ const ActiveOrders = () => {
                         >
                           <CIcon size="sm" icon={cilPencil}></CIcon>
                         </CButton>
-                        <CButton color="primary" variant="ghost">
+                        <CButton
+                          color="primary"
+                          variant="ghost"
+                          onClick={(e) => handleDelete(item.id)}
+                        >
                           <CIcon size="sm" icon={cilTrash}></CIcon>
                         </CButton>
                       </CTableDataCell>
@@ -287,64 +250,6 @@ const ActiveOrders = () => {
           </CCard>
         </CCol>
       </CRow>
-
-      <CModal
-        alignment="center"
-        scrollable
-        visible={visible}
-        onClose={() => setVisible(false)}
-        aria-labelledby="VerticallyCenteredScrollableExample2"
-      >
-        <CModalHeader>
-          <CModalTitle id="VerticallyCenteredScrollableExample2">
-            Выбрать предложение доставщиков
-            <p>
-              {' (Заказ ' + currentOrder.number + ' от '}
-              <Moment format="DD.MM.YY">{currentOrder.date}</Moment>
-              {' )'}
-            </p>
-          </CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CTable align="middle" className="mb-0 border" hover responsive id="tab1">
-            <CTableHead className="text-nowrap">
-              <CTableRow>
-                <CTableHeaderCell className="d-none"></CTableHeaderCell>
-                <CTableHeaderCell className="bg-body-tertiary"></CTableHeaderCell>
-                <CTableHeaderCell className="bg-body-tertiary">Компания</CTableHeaderCell>
-                <CTableHeaderCell className="bg-body-tertiary">Стоимость доставки</CTableHeaderCell>
-                <CTableHeaderCell className="bg-body-tertiary">Действия</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {currentOrder.logisticOffers.map((offer, index1) => (
-                <CTableRow v-for="item in tableItems" key={index1}>
-                  <CTableDataCell className="text-center d-none">{offer.offerId}</CTableDataCell>
-                  <CTableDataCell className="text-center small">
-                    <CFormCheck id={'chk1' + offer.offerId} onClick={handler1} />
-                  </CTableDataCell>
-                  <CTableDataCell className="small">{offer.logisticCompany.name}</CTableDataCell>
-                  <CTableDataCell className="small">{offer.amount}</CTableDataCell>
-
-                  <CTableDataCell>
-                    <CButton color="primary" variant="ghost" onClick={(e) => choose(offer.offerId)}>
-                      <CIcon size="sm" icon={cilHandPointLeft}></CIcon>
-                    </CButton>
-                  </CTableDataCell>
-                </CTableRow>
-              ))}
-            </CTableBody>
-          </CTable>
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setVisible(false)}>
-            Закрыть
-          </CButton>
-          <CButton color="primary" onClick={acceptOffer}>
-            Принять предложение доставки{' '}
-          </CButton>
-        </CModalFooter>
-      </CModal>
     </>
   )
 }

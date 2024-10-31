@@ -1,7 +1,8 @@
 import React from 'react'
 
 //pooling
-const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+//const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+const Dashboard = React.lazy(() => import('./views/entyties/ActiveOrders'))
 const ContragentList = React.lazy(() => import('./views/entyties/ContragentList'))
 const Nsi = React.lazy(() => import('./views/dashboard/Nsi'))
 const Contragent = React.lazy(() => import('./views/entyties/Contragent'))
@@ -12,6 +13,7 @@ const Settings = React.lazy(() => import('./views/dashboard/Settings'))
 const OrderList = React.lazy(() => import('./views/entyties/OrderList'))
 const Order = React.lazy(() => import('./views/entyties/Order'))
 const ActiveOrders = React.lazy(() => import('./views/entyties/ActiveOrders'))
+const LogisticPrice = React.lazy(() => import('./views/entyties/LogisticPrice'))
 ///
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -83,6 +85,8 @@ const routes = [
   { path: '/order/:id', name: 'Заказ', element: Order },
   { path: '/order', name: 'Заказ', element: Order },
   { path: '/active-orders', name: 'Активные заказы', element: ActiveOrders },
+  { path: '/prices', name: 'Прайс-лист', element: LogisticPrice },
+  { path: '/prices/:id', name: 'Прайс-лист', element: LogisticPrice },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

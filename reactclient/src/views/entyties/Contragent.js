@@ -23,6 +23,7 @@ import {
   CFormCheck,
   CFormSelect,
   CSpinner,
+  CNavLink,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -177,7 +178,7 @@ const Contragent = () => {
       </CRow>
       <CRow className="mb-3">
         <CCol sm={3}>Тип компании</CCol>
-        <CCol sm={3}>
+        <CCol sm={4}>
           <CFormCheck
             id="islogist"
             checked={item.logisticCompany}
@@ -199,6 +200,16 @@ const Contragent = () => {
             label="Точка доставки"
             onChange={handler}
           />
+        </CCol>
+        <CCol>
+          <CNavLink
+            href={'#/prices/' + item.id}
+            className={
+              'text-primary m-2 font-weight-bold mt-0 ' + (item.logisticCompany ? '' : 'd-none')
+            }
+          >
+            История цен на услуги доставки
+          </CNavLink>
         </CCol>
       </CRow>
       <CRow className="mb-3">

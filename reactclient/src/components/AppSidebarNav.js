@@ -9,7 +9,7 @@ import { CBadge, CNavLink, CSidebarNav } from '@coreui/react'
 
 export const AppSidebarNav = ({ items }) => {
   const navLink = (name, icon, badge, indent = false) => {
-    return (
+    return  (
       <>
         {icon
           ? icon
@@ -29,19 +29,19 @@ export const AppSidebarNav = ({ items }) => {
   }
 
   const navItem = (item, index, indent = false) => {
-    const { component, name, badge, icon, ...rest } = item
+    const { component, name, badge, visible = true, icon, ...rest } = item
     const Component = component
-    return (
+    return visible ? (
       <Component as="div" key={index}>
         {rest.to || rest.href ? (
           <CNavLink {...(rest.to && { as: NavLink })} {...rest}>
-            {navLink(name, icon, badge, indent)}
+            {navLink(name, icon, badge, visible, indent)}
           </CNavLink>
         ) : (
           navLink(name, icon, badge, indent)
         )}
       </Component>
-    )
+    ) : null
   }
 
   const navGroup = (item, index) => {

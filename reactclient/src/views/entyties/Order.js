@@ -98,6 +98,7 @@ const Order = () => {
   const [selectedOption, setSelectedOption] = useState(null)
   const [optionsLogist, setOptionsLogist] = useState([])
   const [selectedOptionLogist, setSelectedOptionLogist] = useState(null)
+  const [selectedOffer, setSelectedOffer] = useState('')
   const params = useParams()
   const getApiData = async (id) => {
     const itemId = id
@@ -128,6 +129,7 @@ const Order = () => {
         setItem(res)
         setStartDate(new Date(res.date))
         setDepartDate(new Date(res.dateDeparture))
+        setSelectedOffer(res.logisticOffers.length ? res.logisticOffers[0] : '')
       })
   }
 
@@ -146,7 +148,16 @@ const Order = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(item),
-    }).then((response) => response.json())
+    }).then((response) => {
+      if (!response.ok) {
+        const message = `An error has occured: ${response.status}`
+        setLooding(false)
+        setModified(true)
+        alert(message)
+        return
+      }
+      return response.json()
+    })
     //setItem(response)
     await getApiData(response.id)
     setModified(false)
@@ -286,6 +297,69 @@ const Order = () => {
         },
         body: JSON.stringify(param),
       }).then((response) => response.json())
+      await getApiData(param.orderId)
+      //setItem(response)
+      setModified(false)
+      setLooding(false)
+    }
+    if (e.target.text == 'Отказаться от заказа') {
+      var param = { orderId: item.id, logistic: item.logisticCompany.id }
+      const response = await fetch(
+        '/api/Order/refuse-order?orderId=' + param.orderId + '&logistic=' + param.logistic,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(param),
+        },
+      ).then((response) => {
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status}`
+          setLooding(false)
+          setModified(true)
+          alert(message)
+          return
+        }
+        return response.json()
+      })
+      await getApiData(param.orderId)
+      //setItem(response)
+      setModified(false)
+      setLooding(false)
+    }
+    if (e.target.text == 'Взять заказ в работу') {
+      var param = {
+        orderId: item.id,
+        logistic: item.logisticCompany.id,
+        offer: selectedOffer.offerId,
+      }
+      const response = await fetch(
+        '/api/Order/take-order-to-work?orderId=' +
+          param.orderId +
+          '&logistic=' +
+          param.logistic +
+          '&offer=' +
+          param.offer,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(param),
+        },
+      ).then((response) => {
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status}`
+          setLooding(false)
+          setModified(true)
+          alert(message)
+          return
+        }
+        return response.json()
+      })
       await getApiData(param.orderId)
       //setItem(response)
       setModified(false)
