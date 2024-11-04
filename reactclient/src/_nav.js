@@ -19,7 +19,7 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 const idUser = localStorage.getItem('userId')
 const roles = localStorage.getItem('roles')
 const isAdmin = roles.includes('Administrator')
-const isSeller = roles.includes('Seller')
+const isSeller = roles.includes('Customer')
 
 const isLogist = roles.includes('Logist')
 const _nav = [

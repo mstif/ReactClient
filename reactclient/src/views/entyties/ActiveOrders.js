@@ -38,7 +38,13 @@ const ActiveOrders = () => {
   const [items, setItems] = useState([])
   const [filters, setFilters] = useState({ ['itemsPerPage']: 20, ['page']: 1 })
   const [offers, setOffers] = useState([])
-  const [currentOrder, setCurrentOrder] = useState({ logisticOffers: [] })
+  const [currentOrder, setCurrentOrder] = useState({
+    logisticOffers: [],
+    seller: { title: '' },
+    logisticCompany: { title: '' },
+    status: '',
+    deliveryContract: { totalCostDelivery: 0 },
+  })
   const roles = localStorage.getItem('roles')
   let settingsUser = localStorage.getItem('settingsUser')
   let CompanyId = 0
@@ -46,11 +52,12 @@ const ActiveOrders = () => {
     CompanyId = JSON.parse(settingsUser).CompanyId
   }
   const isAdmin = roles.includes('Administrator')
-  const isSeller = roles.includes('Seller')
+  const isSeller = roles.includes('Customer')
 
   const isLogist = roles.includes('Logist')
   const [logistCosts, setLogistCosts] = useState([])
   const [visible, setVisible] = useState(false)
+  const [visibleInfo, setVisibleInfo] = useState(false)
   const getApiData = async () => {
     const response = await fetch('/api/Order/list-orders-dashboard', {
       method: 'POST',
@@ -84,25 +91,74 @@ const ActiveOrders = () => {
   }
   const chooseCompany = (order) => {
     setCurrentOrder(order)
-    setVisible(!visible)
+    if (order.status == 'Предложен') {
+      setVisibleInfo(!visibleInfo)
+      return
+    }
+    if (order.deliveryContract == null) {
+      setVisible(!visible)
+    } else {
+      setVisibleInfo(!visibleInfo)
+    }
   }
-  const choose = (offerId) => {
-    acceptOfferApi(offerId)
+  const choose = (offer) => {
+    acceptOfferApi(offer.orderId, offer.logisticCompany.id)
+    setVisible(false)
   }
   const acceptOffer = () => {
     var table = document.getElementById('tab1')
-    let offerId = ''
+    let logistId = 0
     for (var i = 1, row; (row = table.rows[i]); i++) {
       if (row.cells[1].firstChild.checked) {
-        offerId = row.cells[0].firstChild.data
+        logistId = row.cells[5].firstChild.data
         break
       }
     }
-    acceptOfferApi(offerId)
+    acceptOfferApi(currentOrder.id, logistId)
   }
 
-  const acceptOfferApi = (offerId) => {
-    if (offerId != '') {
+  const finishOrder = async (orderId) => {
+    var param = { orderId: orderId, status: 'Завершено', orderDto: { id: orderId } }
+    const response = await fetch('/api/Order/set-status-order?orderId=' + param.orderId, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(param),
+    }).then((response) => response.json())
+    await getApiData()
+  }
+
+  const cancelOfferForLogist = async () => {
+    var param = { orderId: currentOrder.id }
+    const response = await fetch('/api/Order/cancel-offer-tologistic?orderId=' + param.orderId, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(param),
+    }).then((response) => response.json())
+    setVisibleInfo(false)
+    await getApiData()
+  }
+  //???????????
+  const acceptOfferApi = async (orderId, logistId) => {
+    if (orderId > 0 && logistId > 0) {
+      var param = { orderId: orderId, logistic: logistId }
+      const response = await fetch(
+        '/api/Order/make-offer-tologistic?orderId=' + param.orderId + '&logistic=' + param.logistic,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(param),
+        },
+      ).then((response) => response.json())
+      await getApiData()
     }
   }
   const toMap = () => {
@@ -149,6 +205,15 @@ const ActiveOrders = () => {
         : item.deliveryContract.totalCostDelivery
 
     return res
+  }
+  const getAction = () => {
+    if (currentOrder.status == 'Предложен') {
+      return { title: 'Отказаться от предложения', act: cancelOfferForLogist }
+    }
+    if (currentOrder.status == 'В работе') {
+      return { title: 'Завершить', act: finishOrder }
+    }
+    return { title: 'Неопределено', act: () => {} }
   }
 
   const handler1 = (e) => {
@@ -327,10 +392,11 @@ const ActiveOrders = () => {
                   <CTableDataCell className="small">{offer.amount}</CTableDataCell>
 
                   <CTableDataCell>
-                    <CButton color="primary" variant="ghost" onClick={(e) => choose(offer.offerId)}>
+                    <CButton color="primary" variant="ghost" onClick={(e) => choose(offer)}>
                       <CIcon size="sm" icon={cilHandPointLeft}></CIcon>
                     </CButton>
                   </CTableDataCell>
+                  <CTableDataCell className=" d-none">{offer.logisticCompany.id}</CTableDataCell>
                 </CTableRow>
               ))}
             </CTableBody>
@@ -342,6 +408,63 @@ const ActiveOrders = () => {
           </CButton>
           <CButton color="primary" onClick={acceptOffer}>
             Принять предложение доставки{' '}
+          </CButton>
+        </CModalFooter>
+      </CModal>
+
+      <CModal
+        alignment="center"
+        scrollable
+        visible={visibleInfo}
+        onClose={() => setVisibleInfo(false)}
+        aria-labelledby="VerticallyCenteredScrollableExample3"
+      >
+        <CModalHeader>
+          <CModalTitle id="VerticallyCenteredScrollableExample3">
+            Информация по заказу
+            <p>
+              {' (Заказ ' + currentOrder.number + ' от '}
+              <Moment format="DD.MM.YY">{currentOrder.date}</Moment>
+              {' )'}
+            </p>
+          </CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CRow className="mb-3">
+            <CCol sm={7}>Статус заказа:</CCol>
+            <CCol>
+              <b>{currentOrder.status}</b>
+            </CCol>
+          </CRow>
+          <CRow className="mb-3">
+            <CCol sm={7}>Компания-клиент:</CCol>
+            <CCol>
+              <b>{currentOrder.seller.title}</b>
+            </CCol>
+          </CRow>
+          <CRow className="mb-3">
+            <CCol sm={7}>Компания-доставщик:</CCol>
+            <CCol>
+              <b>{currentOrder.logisticCompany?.title}</b>
+            </CCol>
+          </CRow>
+          <CRow className="mb-3">
+            <CCol sm={7}>Стоимость услуг по договору:</CCol>
+            <CCol>
+              <b>{currentOrder.deliveryContract?.totalCostDelivery}</b>
+            </CCol>
+          </CRow>
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="primary" onClick={() => setVisible(false)}>
+            Закрыть
+          </CButton>
+          <CButton
+            color="secondary"
+            onClick={getAction().act}
+            className={currentOrder.status == 'В работе' ? 'd-none' : 'secondary'}
+          >
+            {getAction().title}
           </CButton>
         </CModalFooter>
       </CModal>

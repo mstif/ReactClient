@@ -77,7 +77,7 @@ const ActiveOrders = () => {
     CompanyId = JSON.parse(settingsUser).CompanyId
   }
   const isAdmin = roles.includes('Administrator')
-  const isSeller = roles.includes('Seller')
+  const isSeller = roles.includes('Customer')
 
   const isLogist = roles.includes('Logist')
   const [logistCosts, setLogistCosts] = useState([])
