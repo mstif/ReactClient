@@ -25,25 +25,26 @@ const isLogist = roles.includes('Logist')
 const _nav = [
   {
     component: CNavItem,
-    name: 'Главная',
+    name: 'Заказы продавца',
     to: '/active-orders',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    visible: isSeller || isAdmin,
     //badge: {
     //  color: 'info',
     //  text: 'NEW',
     //},
   },
-  //{
-  //  component: CNavItem,
-  //  name: 'Заказы логист. компании',
-  //  to: '/active-orders',
-  //  icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-  //  visible: isLogist || isAdmin,
-  //  //badge: {
-  //  //  color: 'info',
-  //  //  text: 'NEW',
-  //  //},
-  //},
+  {
+    component: CNavItem,
+    name: 'Заказы логист. компании',
+    to: '/active-orders-logist',
+    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    visible: isLogist || isAdmin,
+    //badge: {
+    //  color: 'info',
+    //  text: 'NEW',
+    //},
+  },
   {
     component: CNavTitle,
     name: 'Объекты системы',

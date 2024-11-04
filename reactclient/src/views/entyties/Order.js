@@ -99,6 +99,8 @@ const Order = () => {
   const [optionsLogist, setOptionsLogist] = useState([])
   const [selectedOptionLogist, setSelectedOptionLogist] = useState(null)
   const [selectedOffer, setSelectedOffer] = useState('')
+  const roles = localStorage.getItem('roles')
+  const isLogist = roles.includes('Logist')
   const params = useParams()
   const getApiData = async (id) => {
     const itemId = id
@@ -365,6 +367,88 @@ const Order = () => {
       setModified(false)
       setLooding(false)
     }
+    if (e.target.text == 'Доставлен потребителю') {
+      var param = { orderId: item.id, status: 'Отгружен' }
+      const response = await fetch(
+        '/api/Order/set-status-order?orderId=' + param.orderId + '&status=' + param.status,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(param),
+        },
+      ).then((response) => {
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status}`
+          setLooding(false)
+          setModified(true)
+          alert(message)
+          return
+        }
+        return response.json()
+      })
+      await getApiData(param.orderId)
+      //setItem(response)
+      setModified(false)
+      setLooding(false)
+    }
+    if (e.target.text == 'Заказ завершен') {
+      var param = { orderId: item.id, status: 'Завершен' }
+      const response = await fetch(
+        '/api/Order/set-status-order?orderId=' + param.orderId + '&status=' + param.status,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(param),
+        },
+      ).then((response) => {
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status}`
+          setLooding(false)
+          setModified(true)
+          alert(message)
+          return
+        }
+        return response.json()
+      })
+      await getApiData(param.orderId)
+      //setItem(response)
+      setModified(false)
+      setLooding(false)
+    }
+    if (e.target.text == 'Претензия к доставке') {
+      var param = { orderId: item.id, status: 'Претензия' }
+      const response = await fetch(
+        '/api/Order/set-status-order?orderId=' + param.orderId + '&status=' + param.status,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(param),
+        },
+      ).then((response) => {
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status}`
+          setLooding(false)
+          setModified(true)
+          alert(message)
+          return
+        }
+        return response.json()
+      })
+      await getApiData(param.orderId)
+      //setItem(response)
+      setModified(false)
+      setLooding(false)
+    }
+
   }
 
   return (
@@ -393,6 +477,7 @@ const Order = () => {
             onChange={(date) => handleDateDoc(date)}
             dateFormat="dd.MM.YYYY HH:MM"
             showTimeSelect
+            disabled={isLogist}
           />
         </CCol>
       </CRow>
@@ -405,6 +490,7 @@ const Order = () => {
             value={cs(item.number)}
             name="name"
             onChange={handler}
+            disabled={isLogist}
           />
         </CCol>
       </CRow>
@@ -416,6 +502,7 @@ const Order = () => {
             onChange={handleCompanyLogist}
             value={selectedOptionLogist}
             onInputChange={handleInputLogist}
+            isDisabled={isLogist}
           />
         </CCol>
       </CRow>
@@ -435,6 +522,7 @@ const Order = () => {
             onChange={handleCompany}
             value={selectedOption}
             onInputChange={handleInput}
+            isDisabled={isLogist}
           />
         </CCol>
       </CRow>
@@ -447,6 +535,7 @@ const Order = () => {
             selected={departDate}
             onChange={(date) => handleDateDep(date)}
             dateFormat="dd.MM.YYYY"
+            disabled={isLogist}
           />
         </CCol>
       </CRow>
@@ -466,6 +555,7 @@ const Order = () => {
             onChange={handleCargoType}
             value={selectedOptionCargoType}
             onInputChange={handleInputCargoType}
+            isDisabled={isLogist}
           />
         </CCol>
       </CRow>
@@ -476,7 +566,7 @@ const Order = () => {
 
       <CRow className="mb-3">
         <CCol sm={3}>
-          <CButton onClick={saveData} className="btn btn-primary">
+          <CButton onClick={saveData} className="btn btn-primary" disabled={isLogist}>
             Сохранить
           </CButton>
         </CCol>

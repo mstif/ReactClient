@@ -115,6 +115,7 @@ const ActiveOrders = () => {
       }
     }
     acceptOfferApi(currentOrder.id, logistId)
+    setVisible(false)
   }
 
   const finishOrder = async (orderId) => {
@@ -208,7 +209,7 @@ const ActiveOrders = () => {
   }
   const getAction = () => {
     if (currentOrder.status == 'Предложен') {
-      return { title: 'Отказаться от предложения', act: cancelOfferForLogist }
+      return { title: 'Отозвать предложение лог. компании', act: cancelOfferForLogist }
     }
     if (currentOrder.status == 'В работе') {
       return { title: 'Завершить', act: finishOrder }
@@ -456,7 +457,7 @@ const ActiveOrders = () => {
           </CRow>
         </CModalBody>
         <CModalFooter>
-          <CButton color="primary" onClick={() => setVisible(false)}>
+          <CButton color="primary" onClick={() => setVisibleInfo(false)}>
             Закрыть
           </CButton>
           <CButton

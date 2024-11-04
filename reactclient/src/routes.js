@@ -13,6 +13,7 @@ const Settings = React.lazy(() => import('./views/dashboard/Settings'))
 const OrderList = React.lazy(() => import('./views/entyties/OrderList'))
 const Order = React.lazy(() => import('./views/entyties/Order'))
 const ActiveOrders = React.lazy(() => import('./views/entyties/ActiveOrders'))
+const ActiveOrdersForLogist = React.lazy(() => import('./views/entyties/ActiveOrdersForLogist'))
 const LogisticPrice = React.lazy(() => import('./views/entyties/LogisticPrice'))
 ///
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -84,7 +85,8 @@ const routes = [
   { path: '/orders', name: 'Заказы', element: OrderList },
   { path: '/order/:id', name: 'Заказ', element: Order },
   { path: '/order', name: 'Заказ', element: Order },
-  { path: '/active-orders', name: 'Активные заказы', element: ActiveOrders },
+  { path: '/active-orders', name: 'Заказы продавца', element: ActiveOrders },
+  { path: '/active-orders-logist', name: 'Заказы доставщиков', element: ActiveOrdersForLogist },
   { path: '/prices', name: 'Прайс-лист', element: LogisticPrice },
   { path: '/prices/:id', name: 'Прайс-лист', element: LogisticPrice },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
