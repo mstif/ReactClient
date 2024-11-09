@@ -2,10 +2,12 @@ import React from 'react'
 import classNames from 'classnames'
 import { useState, useEffect, Suspense } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import Select from 'react-select'
 import { registerLocale, setDefaultLocale } from 'react-datepicker'
+import Moment from 'react-moment'
 import { ru } from 'date-fns/locale/ru'
 registerLocale('ru', ru)
 import {
@@ -33,6 +35,9 @@ import {
   CDropdownToggle,
   CDropdownMenu,
   CDropdownItem,
+  CNav,
+  CNavItem,
+  CNavLink,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -59,6 +64,8 @@ import {
   cilCheckAlt,
   cilPencil,
   cilLocationPin,
+  cilTrash,
+  cilPlus,
 } from '@coreui/icons'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
@@ -86,6 +93,7 @@ const Order = () => {
     longitude: '',
     name: '',
     availableActions: [{ id: '', title: '' }],
+    invoices: [],
   }
   const [item, setItem] = useState(initItem)
   const [isLoading, setLooding] = useState(false)
@@ -269,7 +277,16 @@ const Order = () => {
     if (val == null) return 0
     else return val
   }
+  function handleEdit(id) {
+    document.location = '#/invoice/' + id
+  }
 
+  const handleDelete = async (id) => {
+    const response = await fetch('/api/Invoice/delete?id=' + id, {
+      method: 'DELETE',
+      credentials: 'include',
+    }).then((response) => getApiData())
+  }
   const handleActionsChange = async (e) => {
     if (e.target.text == 'Предложить лог. компании') {
       var param = { orderId: item.id, logistic: item.logisticCompany.id }
@@ -448,7 +465,6 @@ const Order = () => {
       setModified(false)
       setLooding(false)
     }
-
   }
 
   return (
@@ -563,7 +579,6 @@ const Order = () => {
         <CCol sm={3}>Статус</CCol>
         <CCol sm={9}>{cs(item.status)}</CCol>
       </CRow>
-
       <CRow className="mb-3">
         <CCol sm={3}>
           <CButton onClick={saveData} className="btn btn-primary" disabled={isLogist}>
@@ -585,6 +600,71 @@ const Order = () => {
         {/*<CCol sm={1}>*/}
         {/*  <CSpinner color="primary" variant="grow" className={isLoading ? '' : 'd-none'} />*/}
         {/*</CCol>*/}
+      </CRow>
+      <CRow>
+        <CCol xs>
+          <CCard className="mb-4">
+            <CCardHeader>Накладные заказа</CCardHeader>
+            <CCardBody>
+              <CNav variant="pills" className="card-header-pills">
+                <CNavItem>
+                  <CNavLink
+                    href={'#/invoice/0?orderId=' + item.id}
+                    className="text-primary  font-weight-bold"
+                  >
+                    <CIcon icon={cilPlus} />
+                    Добавить
+                  </CNavLink>
+                </CNavItem>
+              </CNav>
+              <CTable align="middle" className="mb-0 border" hover responsive id="tab">
+                <CTableHead className="text-nowrap">
+                  <CTableRow>
+                    <CTableHeaderCell className="bg-body-tertiary d-none">Id</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Накладная</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Точка доставки</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">
+                      Стоимость груза
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Общий вес</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Действия</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {item.invoices.map((invoice, index) => (
+                    <CTableRow v-for="item in tableItems" key={index}>
+                      <CTableDataCell className="text-center d-none">{invoice.id}</CTableDataCell>
+                      <CTableDataCell className="text-left ">
+                        {invoice.number} от <Moment format="DD.MM.YYYY">{invoice.startDate}</Moment>
+                      </CTableDataCell>
+                      <CTableDataCell>{invoice.deliveryPoint.name}</CTableDataCell>
+                      <CTableDataCell className="small">{invoice.totalCost}</CTableDataCell>
+                      <CTableDataCell>
+                        <div className="small">{invoice.weight}</div>
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        <CButton
+                          color="primary"
+                          variant="ghost"
+                          onClick={(e) => handleEdit(invoice.id)}
+                        >
+                          <CIcon size="sm" icon={cilPencil}></CIcon>
+                        </CButton>
+                        <CButton
+                          color="primary"
+                          variant="ghost"
+                          onClick={(e) => handleDelete(invoice.id)}
+                        >
+                          <CIcon size="sm" icon={cilTrash}></CIcon>
+                        </CButton>
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </CCardBody>
+          </CCard>
+        </CCol>
       </CRow>
     </>
   )

@@ -62,7 +62,7 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
-import OpenMap1 from '../../map/OpenMap'
+//import OpenMap1 from '../../map/OpenMap'
 
 const ContragentsList = () => {
   const [items, setItems] = useState([])

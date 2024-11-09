@@ -84,7 +84,7 @@ const User = () => {
   const [role, setRole] = useState('')
   const currentRoles = localStorage.getItem('roles')
   const isAdmin = currentRoles.includes('Administrator')
-
+  const navigate = useNavigate()
   const params = useParams()
   const getApiData = async () => {
     const itemId = params.id
@@ -100,7 +100,9 @@ const User = () => {
         setRole(res.majorRole)
       })
   }
-
+  const refreshPage = () => {
+    navigate(0)
+  }
   useEffect(() => {
     getApiData()
   }, [])
@@ -124,6 +126,7 @@ const User = () => {
     setItem(response)
     setModified(false)
     setLooding(false)
+    refreshPage()
   }
 
   const handleChange = (e) => {

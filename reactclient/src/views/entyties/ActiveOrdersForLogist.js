@@ -70,12 +70,11 @@ const ActiveOrdersForLogist = () => {
       },
       body: JSON.stringify(filters),
     }).then((response) => response.json())
-
-    setItems(response)
     let costs = response.map((t) => {
       return t.logisticOffers.find((s) => s.logisticCompany.id == CompanyId)
     })
     setLogistCosts(costs)
+    setItems(response)
   }
 
   useEffect(() => {
@@ -152,7 +151,10 @@ const ActiveOrdersForLogist = () => {
       item.deliveryContract == null
         ? isSeller || isAdmin
           ? item.logisticOffers.length
-            ? item.logisticOffers[0].amount
+            ? item.status == 'Новый'
+              ? item.logisticOffers[0].amount
+              : item.logisticOffers.find((l) => l.logisticCompany.id == item.logisticCompany.id)
+                  ?.amount
             : ''
           : logistCosts.find((s) => s != undefined && s.orderId == item.id)?.amount
         : item.deliveryContract.totalCostDelivery
@@ -369,18 +371,7 @@ const ActiveOrdersForLogist = () => {
                           className={'text-primary m-2 font-weight-bold '}
                           onClick={() => chooseOrder(item)}
                         >
-                          {item.deliveryContract == null
-                            ? isSeller || isAdmin
-                              ? item.logisticOffers.length
-                                ? item.status == 'Новый'
-                                  ? item.logisticOffers[0].amount
-                                  : item.logisticOffers.find(
-                                      (l) => l.logisticCompany.id == item.logisticCompany.id,
-                                    )?.amount
-                                : ''
-                              : logistCosts.find((s) => s != undefined && s.orderId == item.id)
-                                  ?.amount
-                            : item.deliveryContract.totalCostDelivery}
+                          {getTotalCostOrder(item)}
                         </CNavLink>
                       </CTableDataCell>
                       <CTableDataCell>
