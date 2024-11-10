@@ -53,6 +53,7 @@ import {
   cilPlus,
   cilLocationPin,
   cilCircle,
+  cilZoom
 } from '@coreui/icons'
 import { Link, useLocation } from 'react-router-dom'
 import avatar1 from 'src/assets/images/avatars/1.jpg'
@@ -65,10 +66,11 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 
-
 const OrderList = () => {
   const [items, setItems] = useState([])
   const [filters, setFilters] = useState({ ['itemsPerPage']: 20, ['page']: 1 })
+  const roles = localStorage.getItem('roles')
+  const isLogist = roles.includes('Logist')
   const getApiData = async () => {
     const response = await fetch('/api/Order/list-orders', {
       method: 'POST',
@@ -217,12 +219,13 @@ const OrderList = () => {
                           variant="ghost"
                           onClick={(e) => handleEdit(item.id)}
                         >
-                          <CIcon size="sm" icon={cilPencil}></CIcon>
+                          <CIcon size="sm" icon={isLogist ? cilZoom : cilPencil}></CIcon>
                         </CButton>
                         <CButton
                           color="primary"
                           variant="ghost"
                           onClick={(e) => handleDelete(item.id)}
+                          className={isLogist ? 'd-none' : ''}
                         >
                           <CIcon size="sm" icon={cilTrash}></CIcon>
                         </CButton>

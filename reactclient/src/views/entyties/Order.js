@@ -66,6 +66,7 @@ import {
   cilLocationPin,
   cilTrash,
   cilPlus,
+  cilZoom,
 } from '@coreui/icons'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
@@ -288,6 +289,7 @@ const Order = () => {
     }).then((response) => getApiData())
   }
   const handleActionsChange = async (e) => {
+    setLooding(true)
     if (e.target.text == 'Предложить лог. компании') {
       var param = { orderId: item.id, logistic: item.logisticCompany.id }
       const response = await fetch(
@@ -411,6 +413,62 @@ const Order = () => {
       setModified(false)
       setLooding(false)
     }
+
+    if (e.target.text == 'Опубликовать заказ') {
+      var param = { orderId: item.id, status: 'Новый' }
+      const response = await fetch(
+        '/api/Order/set-status-order?orderId=' + param.orderId + '&status=' + param.status,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(param),
+        },
+      ).then((response) => {
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status}`
+          setLooding(false)
+          setModified(true)
+          alert(message)
+          return
+        }
+        return response.json()
+      })
+      await getApiData(param.orderId)
+      //setItem(response)
+      setModified(false)
+      setLooding(false)
+    }
+    if (e.target.text == 'Отозвать заказ') {
+      var param = { orderId: item.id, status: 'Черновик' }
+      const response = await fetch(
+        '/api/Order/set-status-order?orderId=' + param.orderId + '&status=' + param.status,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(param),
+        },
+      ).then((response) => {
+        if (!response.ok) {
+          const message = `An error has occured: ${response.status}`
+          setLooding(false)
+          setModified(true)
+          alert(message)
+          return
+        }
+        return response.json()
+      })
+      await getApiData(param.orderId)
+      //setItem(response)
+      setModified(false)
+      setLooding(false)
+    }
+
     if (e.target.text == 'Заказ завершен') {
       var param = { orderId: item.id, status: 'Завершен' }
       const response = await fetch(
@@ -607,7 +665,7 @@ const Order = () => {
             <CCardHeader>Накладные заказа</CCardHeader>
             <CCardBody>
               <CNav variant="pills" className="card-header-pills">
-                <CNavItem>
+                <CNavItem className={isLogist ? 'd-none' : ''}>
                   <CNavLink
                     href={'#/invoice/0?orderId=' + item.id}
                     className="text-primary  font-weight-bold"
@@ -648,12 +706,13 @@ const Order = () => {
                           variant="ghost"
                           onClick={(e) => handleEdit(invoice.id)}
                         >
-                          <CIcon size="sm" icon={cilPencil}></CIcon>
+                          <CIcon size="sm" icon={isLogist ? cilZoom : cilPencil}></CIcon>
                         </CButton>
                         <CButton
                           color="primary"
                           variant="ghost"
                           onClick={(e) => handleDelete(invoice.id)}
+                          className={isLogist ? 'd-none' : ''}
                         >
                           <CIcon size="sm" icon={cilTrash}></CIcon>
                         </CButton>

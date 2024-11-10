@@ -33,9 +33,12 @@ import {
 import React, { useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
+import * as signalR from '@microsoft/signalr'
 
 const ActiveOrders = () => {
   const [items, setItems] = useState([])
+  const [notificationConnection, setNotificationConnection] = useState(null);
+  const [notifications, setNotifications] = useState([]) // State for notifications
   const [filters, setFilters] = useState({ ['itemsPerPage']: 20, ['page']: 1 })
   const [offers, setOffers] = useState([])
   const [currentOrder, setCurrentOrder] = useState({
@@ -79,6 +82,33 @@ const ActiveOrders = () => {
     getApiData()
   }, [])
 
+  useEffect(() => {
+    const newNotificationConnection = new signalR.HubConnectionBuilder()
+      .withUrl('https://localhost:7239/exchangeHub') // , {
+      //     accessTokenFactory: () => token
+      // }
+      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
+      .build()
+
+    setNotificationConnection(newNotificationConnection)
+  }, [])
+
+  useEffect(() => {
+    if (notificationConnection) {
+      notificationConnection
+        .start()
+        .then(() => {
+          console.log('Connected to Notification Hub!')
+
+          notificationConnection.on('ReceiveMessage', (notification) => {
+            setNotifications((notifications) => [...notifications, notification])
+            getApiData()
+          })
+        })
+        .catch((e) => console.log('Notification Connection failed: ', e))
+    }
+  }, [notificationConnection])
   function handleEdit(id) {
     document.location = '#/order/' + id
   }
