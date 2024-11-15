@@ -32,7 +32,12 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" name='Email' id='email' />
+                      <CFormInput
+                        placeholder="Username"
+                        autoComplete="username"
+                        name="Email"
+                        id="email"
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -42,7 +47,8 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
-                        name='Password' id='password'
+                        name="Password"
+                        id="password"
                       />
                     </CInputGroup>
                     <CRow>
@@ -65,7 +71,8 @@ const Login = () => {
                   <div>
                     <h3>Регистрация</h3>
                     <p>
-                      После регистрации необходимо отправить ваши данные администратору для подтверждения роли в организации
+                      После регистрации необходимо отправить ваши данные администратору для
+                      подтверждения роли в организации
                     </p>
                     <Link to="/register">
                       <CButton color="primary" className="mt-3" active tabIndex={-1}>
@@ -84,45 +91,47 @@ const Login = () => {
   )
   async function loginHandler(e) {
     e.preventDefault()
-    const form_ = e.target, submitter = document.querySelector("input.login")
+    const form_ = e.target,
+      submitter = document.querySelector('input.login')
 
-    const formData = new FormData(form_, submitter), dataToSend = {};
+    const formData = new FormData(form_, submitter),
+      dataToSend = {}
 
     for (const [key, value] of formData) {
-      dataToSend[key] = value;
+      dataToSend[key] = value
     }
 
-    if (dataToSend.Remember === "on") {
-      dataToSend.Remember = true;
+    if (dataToSend.Remember === 'on') {
+      dataToSend.Remember = true
     }
 
-    console.log("login data before send: ", dataToSend);
-    const response = await fetch("api/securewebsite/login", {
-      method: "POST",
-      credentials: "include",
+    console.log('login data before send: ', dataToSend)
+    const response = await fetch('api/securewebsite/login', {
+      method: 'POST',
+      credentials: 'include',
       body: JSON.stringify(dataToSend),
       headers: {
-        "content-type": "Application/json",
-        "Accept": "application/json"
-      }
-    });
+        'content-type': 'Application/json',
+        Accept: 'application/json',
+      },
+    })
 
-    const data = await response.json();
+    const data = await response.json()
 
     if (response.ok) {
-      localStorage.setItem("user", dataToSend.Email);
-      document.location = "/";
+      localStorage.setItem('user', dataToSend.Email)
+      document.location = '/'
     }
 
-    const messageEl = document.querySelector(".message");
+    const messageEl = document.querySelector('.message')
     if (data.message) {
-      messageEl.innerHTML = data.message;
+      messageEl.innerHTML = data.message
     } else {
-      messageEl.innerHTML = "Something went wrong, please try again";
+      messageEl.innerHTML = 'Something went wrong, please try again'
     }
 
-    console.log("login error: ", data);
+    console.log('login error: ', data)
   }
 }
 
-export default Login;
+export default Login

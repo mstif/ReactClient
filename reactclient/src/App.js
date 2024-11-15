@@ -58,9 +58,6 @@ const App = () => {
         <Routes>
           <Route element={<ProtectedRoutes />}>
             <Route path="*" element={<DefaultLayout />} />
-            <Route path="/buttons/buttons" element={<Buttons />} />
-
-            {/* <Route path="/contragent/:id" element={<Contragent />} />*/}
           </Route>
           <Route exact path="/login" name="Login Page" element={<Login />} />
           <Route exact path="/register" name="Register Page" element={<Register />} />
