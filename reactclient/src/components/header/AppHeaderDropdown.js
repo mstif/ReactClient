@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import {
   CAvatar,
   CBadge,
@@ -8,6 +9,8 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
+  CNavLink,
+  CNavItem,
 } from '@coreui/react'
 import {
   cilBell,
@@ -25,13 +28,44 @@ import CIcon from '@coreui/icons-react'
 import avatar8 from './../../assets/images/avatars/9.jpg'
 
 const AppHeaderDropdown = () => {
+  const idUser = localStorage.getItem('userId')
+  const roles = localStorage.getItem('roles')
+  const isAdmin = roles.includes('Administrator')
+  const isSeller = roles.includes('Customer')
+  const isLogist = roles.includes('Logist')
+  async function logoutHandler(e) {
+    const response = await fetch('api/securewebsite/logout', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'content-type': 'Application/json',
+        Accept: 'application/json',
+      },
+    })
+
+    const data = await response.json()
+
+    if (response.ok) {
+      //localStorage.setItem('user', dataToSend.Email)
+      document.location = '/'
+    }
+  }
+
+  const navigate = useNavigate()
+  const goToPath = () => {
+    let path = '/settings'
+    navigate(path)
+  }
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
         <CAvatar src={avatar8} size="md" />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">Учетная запись</CDropdownHeader>
+        <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">
+          Учетная запись
+        </CDropdownHeader>
         {/*<CDropdownItem href="#">*/}
         {/*  <CIcon icon={cilBell} className="me-2" />*/}
         {/*  Updates*/}
@@ -39,13 +73,13 @@ const AppHeaderDropdown = () => {
         {/*    42*/}
         {/*  </CBadge>*/}
         {/*</CDropdownItem>*/}
-        {/*<CDropdownItem href="#">*/}
-        {/*  <CIcon icon={cilEnvelopeOpen} className="me-2" />*/}
-        {/*  Messages*/}
-        {/*  <CBadge color="success" className="ms-2">*/}
-        {/*    42*/}
-        {/*  </CBadge>*/}
-        {/*</CDropdownItem>*/}
+        <CDropdownItem href="#">
+          <CIcon icon={cilEnvelopeOpen} className="me-2" />
+          Уведомлений
+          <CBadge color="success" className="ms-2">
+            42
+          </CBadge>
+        </CDropdownItem>
         {/*<CDropdownItem href="#">*/}
         {/*  <CIcon icon={cilTask} className="me-2" />*/}
         {/*  Tasks*/}
@@ -61,11 +95,11 @@ const AppHeaderDropdown = () => {
         {/*  </CBadge>*/}
         {/*</CDropdownItem>*/}
         {/*<CDropdownHeader className="bg-body-secondary fw-semibold my-2">Settings</CDropdownHeader>*/}
-        <CDropdownItem href="#">
+        <CDropdownItem href={'#/user/' + idUser}>
           <CIcon icon={cilUser} className="me-2" />
           Профиль
         </CDropdownItem>
-        <CDropdownItem href="#">
+        <CDropdownItem href="#/settings">
           <CIcon icon={cilSettings} className="me-2" />
           Настройки
         </CDropdownItem>
@@ -84,7 +118,7 @@ const AppHeaderDropdown = () => {
         {/*  </CBadge>*/}
         {/*</CDropdownItem>*/}
         <CDropdownDivider />
-        <CDropdownItem href="/api/securewebsite/logout">
+        <CDropdownItem href="#" onClick={logoutHandler}>
           <CIcon icon={cilLockLocked} className="me-2" />
           Выйти
         </CDropdownItem>

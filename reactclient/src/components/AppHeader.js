@@ -13,6 +13,7 @@ import {
   CNavLink,
   CNavItem,
   useColorModes,
+  CBadge,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -66,8 +67,11 @@ const AppHeader = () => {
         </CHeaderNav>
         <CHeaderNav className="ms-auto">
           <CNavItem>
-            <CNavLink href="#">
+            <CNavLink href="#" className="position-relative">
               <CIcon icon={cilBell} size="lg" />
+              <CBadge color="danger" position="top-start" shape="rounded-pill" size="sm">
+                99+ <span className="visually-hidden">unread messages</span>
+              </CBadge>
             </CNavLink>
           </CNavItem>
           <CNavItem>
