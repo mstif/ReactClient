@@ -73,13 +73,13 @@ const AppHeaderDropdown = () => {
         {/*    42*/}
         {/*  </CBadge>*/}
         {/*</CDropdownItem>*/}
-        <CDropdownItem href="#">
-          <CIcon icon={cilEnvelopeOpen} className="me-2" />
-          Уведомлений
-          <CBadge color="success" className="ms-2">
-            42
-          </CBadge>
-        </CDropdownItem>
+        {/*<CDropdownItem href="#">*/}
+        {/*  <CIcon icon={cilEnvelopeOpen} className="me-2" />*/}
+        {/*  Уведомлений*/}
+        {/*  <CBadge color="success" className="ms-2">*/}
+        {/*    42*/}
+        {/*  </CBadge>*/}
+        {/*</CDropdownItem>*/}
         {/*<CDropdownItem href="#">*/}
         {/*  <CIcon icon={cilTask} className="me-2" />*/}
         {/*  Tasks*/}

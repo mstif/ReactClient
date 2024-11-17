@@ -35,8 +35,13 @@ const AppHeader = () => {
 
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
-
+  const cntMessageValue = useSelector((gs) => gs.countMessages)
+  const notifs = useSelector((gs) => gs.notifications)
   useEffect(() => {
+    let cnt = JSON.parse(localStorage.getItem('Messages'))?.cntMessages ?? 0
+    let notifs = JSON.parse(localStorage.getItem('Messages'))?.notifs ?? []
+    dispatch({ type: 'addMessage', countMessages: cnt })
+    dispatch({ type: 'addMessage', notifications: notifs })
     document.addEventListener('scroll', () => {
       headerRef.current &&
         headerRef.current.classList.toggle('shadow-sm', document.documentElement.scrollTop > 0)
@@ -69,8 +74,15 @@ const AppHeader = () => {
           <CNavItem>
             <CNavLink href="#" className="position-relative">
               <CIcon icon={cilBell} size="lg" />
-              <CBadge color="danger" position="top-start" shape="rounded-pill" size="sm">
-                99+ <span className="visually-hidden">unread messages</span>
+              <CBadge
+                color="danger"
+                position="top-start"
+                shape="rounded-pill"
+                size="sm"
+                className={notifs?.length == 0 ? 'd-none' : ''}
+              >
+                {notifs?.length}
+                <span className="visually-hidden">unread messages</span>
               </CBadge>
             </CNavLink>
           </CNavItem>

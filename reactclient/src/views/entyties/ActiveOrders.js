@@ -34,10 +34,15 @@ import React, { useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { Link } from 'react-router-dom'
 import * as signalR from '@microsoft/signalr'
+import { useSelector, useDispatch } from 'react-redux'
 
 const ActiveOrders = () => {
   const [items, setItems] = useState([])
-  const [notificationConnection, setNotificationConnection] = useState(null);
+  //const cntMessageValue = useSelector((gs) => gs.countMessages)
+  const [notificationConnection, setNotificationConnection] = useState(null)
+  const dispatch = useDispatch()
+  //const cntMessageFromLS = localStorage.getItem("Messages")?.cntMessages
+  //const [cntMess, setCnt] = useState(JSON.parse(localStorage.getItem("Messages"))?.cntMessages??0)
   const [notifications, setNotifications] = useState([]) // State for notifications
   const [filters, setFilters] = useState({ ['itemsPerPage']: 20, ['page']: 1 })
   const [offers, setOffers] = useState([])
@@ -76,6 +81,7 @@ const ActiveOrders = () => {
       return t.logisticOffers.find((s) => s.logisticCompany.id == CompanyId)
     })
     setLogistCosts(costs)
+
   }
 
   useEffect(() => {
@@ -101,9 +107,27 @@ const ActiveOrders = () => {
         .then(() => {
           console.log('Connected to Notification Hub!')
 
-          notificationConnection.on('ReceiveMessage', (notification) => {
-            setNotifications((notifications) => [...notifications, notification])
+          notificationConnection.on('ReceiveMessage', (role, companyTarget, message) => {
+            // setNotifications((notifications) => [...notifications, message])
+
             getApiData()
+
+            let cnt = JSON.parse(localStorage.getItem('Messages'))?.cntMessages ?? 0
+            let notifs = JSON.parse(localStorage.getItem('Messages'))?.notifs ?? []
+            if (
+              (roles?.includes(role) || role == '') &&
+              (companyTarget == CompanyId || companyTarget == 0)
+            ) {
+              notifications.push(message)
+              localStorage.setItem(
+                'Messages',
+                JSON.stringify({ cntMessages: cnt + 1, notifs: notifications }),
+              )
+              dispatch({ type: 'addMessage', notifications: notifications })
+              dispatch({ type: 'addMessage', countMessages: cnt + 1 })
+            }
+            //localStorage.setItem('Messages', JSON.stringify({ cntMessages: cnt + 1, notifs: [] }))
+            //dispatch({ type: 'addMessage', countMessages: cnt + 1 })
           })
         })
         .catch((e) => console.log('Notification Connection failed: ', e))

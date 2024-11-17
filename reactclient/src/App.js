@@ -23,7 +23,7 @@ const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Buttons = React.lazy(() => import('./views/buttons/buttons/Buttons'))
-const OpenMap1 = React.lazy(() => import('./map/OpenMap'))
+//const OpenMap1 = React.lazy(() => import('./map/OpenMap'))
 
 const dataPoints = '{}'
 const App = () => {

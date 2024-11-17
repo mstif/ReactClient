@@ -80,7 +80,7 @@ const Nsi = () => {
                 <CIcon icon={cilFile} />
                 <span className="m-2">Заказы</span>
               </CNavLink>
-              <CNavLink href="#" className="text-primary m-2 font-weight-bold">
+              <CNavLink href="#/delivery-contracts" className="text-primary m-2 font-weight-bold">
                 <CIcon icon={cilFile} />
                 <span className="m-2">Договора</span>
               </CNavLink>
