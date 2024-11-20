@@ -53,21 +53,15 @@ import {
   cilLocationPin,
 } from '@coreui/icons'
 import { Link, useLocation } from 'react-router-dom'
-import avatar1 from 'src/assets/images/avatars/1.jpg'
-import avatar2 from 'src/assets/images/avatars/2.jpg'
-import avatar3 from 'src/assets/images/avatars/3.jpg'
-import avatar4 from 'src/assets/images/avatars/4.jpg'
-import avatar5 from 'src/assets/images/avatars/5.jpg'
-import avatar6 from 'src/assets/images/avatars/6.jpg'
 
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 
-const UserList = () => {
+const CargoTypeList = () => {
   const [items, setItems] = useState([])
   const [pointsAddr, setPoints] = useState([])
   const getApiData = async () => {
-    const response = await fetch('/api/securewebsite/userlist', {
+    const response = await fetch('/api/CargoType/list-cargotypes', {
       method: 'GET',
       credentials: 'include',
     }).then((response) => response.json())
@@ -79,31 +73,31 @@ const UserList = () => {
     getApiData()
   }, [])
 
-  function handleEdit(id) {
-    document.location = '#/user/' + id
-  }
+  //function handleEdit(id) {
+  //  document.location = '#/user/' + id
+  //}
 
-  const handleDelete = async (id) => {
-    const response = await fetch('/api/Contragent/delete?id=' + id, {
-      method: 'DELETE',
-      credentials: 'include',
-    }).then((response) => getApiData())
-  }
+  //const handleDelete = async (id) => {
+  //  const response = await fetch('/api/Contragent/delete?id=' + id, {
+  //    method: 'DELETE',
+  //    credentials: 'include',
+  //  }).then((response) => getApiData())
+  //}
 
   return (
     <>
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Пользователи</CCardHeader>
+            <CCardHeader>Типы грузов</CCardHeader>
             <CCardBody>
               <CNav variant="pills" className="card-header-pills">
-                <CNavItem>
-                  <CNavLink href="#/user/0" className="text-primary m-2 font-weight-bold">
-                    <CIcon icon={cilPlus} />
-                    Добавить
-                  </CNavLink>
-                </CNavItem>
+                {/*<CNavItem>*/}
+                {/*  <CNavLink href="#/user/0" className="text-primary m-2 font-weight-bold">*/}
+                {/*    <CIcon icon={cilPlus} />*/}
+                {/*    Добавить*/}
+                {/*  </CNavLink>*/}
+                {/*</CNavItem>*/}
               </CNav>
               <CTable align="middle" className="mb-0 border" hover responsive id="tab">
                 <CTableHead className="text-nowrap">
@@ -111,16 +105,10 @@ const UserList = () => {
                     <CTableHeaderCell className="d-none"></CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center"></CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center">
-                      Имя
+                      Наименование
                     </CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center">
-                      Email
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary text-center">
-                      Компания
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary text-center">
-                      Роли
+                      Комментарий
                     </CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary">Действия</CTableHeaderCell>
                   </CTableRow>
@@ -133,32 +121,26 @@ const UserList = () => {
                         <CFormCheck id={'chk' + index} />
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                        <div className="small">{item.userName}</div>
+                        <div className="small">{item.name}</div>
                       </CTableDataCell>
                       <CTableDataCell>
-                        <div className="small text-center">{item.email}</div>
-                      </CTableDataCell>
-                      <CTableDataCell className="small text-center">{item.company}</CTableDataCell>
-                      <CTableDataCell>
-                        <div className="small text-center">
-                          <span>{item.majorRole}</span>
-                        </div>
+                        <div className="small text-center">{item.comment}</div>
                       </CTableDataCell>
                       <CTableDataCell>
-                        <CButton
-                          color="primary"
-                          variant="ghost"
-                          onClick={(e) => handleEdit(item.id)}
-                        >
-                          <CIcon size="sm" icon={cilPencil}></CIcon>
-                        </CButton>
-                        <CButton
-                          color="primary"
-                          variant="ghost"
-                          onClick={(e) => handleDelete(item.id)}
-                        >
-                          <CIcon size="sm" icon={cilTrash}></CIcon>
-                        </CButton>
+                        {/*<CButton*/}
+                        {/*  color="primary"*/}
+                        {/*  variant="ghost"*/}
+                        {/*  onClick={(e) => handleEdit(item.id)}*/}
+                        {/*>*/}
+                        {/*  <CIcon size="sm" icon={cilPencil}></CIcon>*/}
+                        {/*</CButton>*/}
+                        {/*<CButton*/}
+                        {/*  color="primary"*/}
+                        {/*  variant="ghost"*/}
+                        {/*  onClick={(e) => handleDelete(item.id)}*/}
+                        {/*>*/}
+                        {/*  <CIcon size="sm" icon={cilTrash}></CIcon>*/}
+                        {/*</CButton>*/}
                       </CTableDataCell>
                     </CTableRow>
                   ))}
@@ -172,4 +154,4 @@ const UserList = () => {
   )
 }
 
-export default UserList
+export default CargoTypeList

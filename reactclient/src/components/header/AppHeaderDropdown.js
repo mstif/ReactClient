@@ -30,6 +30,7 @@ import avatar8 from './../../assets/images/avatars/9.jpg'
 const AppHeaderDropdown = () => {
   const idUser = localStorage.getItem('userId')
   const roles = localStorage.getItem('roles')
+  const user = localStorage.getItem('user')
   const isAdmin = roles.includes('Administrator')
   const isSeller = roles.includes('Customer')
   const isLogist = roles.includes('Logist')
@@ -97,7 +98,7 @@ const AppHeaderDropdown = () => {
         {/*<CDropdownHeader className="bg-body-secondary fw-semibold my-2">Settings</CDropdownHeader>*/}
         <CDropdownItem href={'#/user/' + idUser}>
           <CIcon icon={cilUser} className="me-2" />
-          Профиль
+          {user}
         </CDropdownItem>
         <CDropdownItem href="#/settings">
           <CIcon icon={cilSettings} className="me-2" />

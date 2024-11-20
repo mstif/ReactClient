@@ -110,6 +110,7 @@ const Order = () => {
   const [selectedOffer, setSelectedOffer] = useState('')
   const roles = localStorage.getItem('roles')
   const isLogist = roles.includes('Logist')
+  const navigate = useNavigate()
   const params = useParams()
   const getApiData = async (id) => {
     const itemId = id
@@ -287,6 +288,14 @@ const Order = () => {
       method: 'DELETE',
       credentials: 'include',
     }).then((response) => getApiData())
+  }
+  const addInvoice = (e) => {
+    e.preventDefault()
+    if (item.id == 0) {
+      alert('Сначала нужно записать заказ!')
+      return
+    }
+    navigate('/invoice/0?orderId=' + item.id)
   }
   const handleActionsChange = async (e) => {
     setLooding(true)
@@ -667,8 +676,9 @@ const Order = () => {
               <CNav variant="pills" className="card-header-pills">
                 <CNavItem className={isLogist ? 'd-none' : ''}>
                   <CNavLink
-                    href={'#/invoice/0?orderId=' + item.id}
+                    href="#"
                     className="text-primary  font-weight-bold"
+                    onClick={addInvoice}
                   >
                     <CIcon icon={cilPlus} />
                     Добавить

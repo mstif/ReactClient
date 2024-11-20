@@ -17,6 +17,7 @@ const ActiveOrdersForLogist = React.lazy(() => import('./views/entyties/ActiveOr
 const LogisticPrice = React.lazy(() => import('./views/entyties/LogisticPrice'))
 const Invoice = React.lazy(() => import('./views/entyties/Invoice'))
 const DeliveryContractsList = React.lazy(() => import('./views/entyties/DeliveryContractsList'))
+const CargoTypeList = React.lazy(() => import('./views/entyties/CargoTypeList'))
 ///
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -93,6 +94,7 @@ const routes = [
   { path: '/prices/:id', name: 'Прайс-лист', element: LogisticPrice },
   { path: '/invoice/:id', name: 'Накладная (редактирование)', element: Invoice },
   { path: '/delivery-contracts', name: 'Договора', element: DeliveryContractsList },
+  { path: '/cargo-types', name: 'Типы грузов', element: CargoTypeList },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
