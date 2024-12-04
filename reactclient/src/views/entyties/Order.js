@@ -68,7 +68,7 @@ import {
   cilPlus,
   cilZoom,
 } from '@coreui/icons'
-
+import * as signalR from '@microsoft/signalr'
 import avatar1 from 'src/assets/images/avatars/1.jpg'
 import avatar2 from 'src/assets/images/avatars/2.jpg'
 import avatar3 from 'src/assets/images/avatars/3.jpg'
@@ -108,8 +108,15 @@ const Order = () => {
   const [optionsLogist, setOptionsLogist] = useState([])
   const [selectedOptionLogist, setSelectedOptionLogist] = useState(null)
   const [selectedOffer, setSelectedOffer] = useState('')
+  const [notificationConnection, setNotificationConnection] = useState(null)
   const roles = localStorage.getItem('roles')
   const isLogist = roles.includes('Logist')
+  const readOnly = isLogist || (item?.status != 'Новый' && item?.status != 'Черновик')
+  let settingsUser = localStorage.getItem('settingsUser')
+  let CompanyId = 0
+  if (settingsUser != undefined && settingsUser != 'null') {
+    CompanyId = JSON.parse(settingsUser).CompanyId
+  }
   const navigate = useNavigate()
   const params = useParams()
   const getApiData = async (id) => {
@@ -148,6 +155,42 @@ const Order = () => {
   useEffect(() => {
     getApiData(params.id)
   }, [])
+
+  useEffect(() => {
+    const newNotificationConnection = new signalR.HubConnectionBuilder()
+      .withUrl('https://localhost:7239/exchangeHub') // , {
+      //     accessTokenFactory: () => token
+      // }
+      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
+      .build()
+
+    setNotificationConnection(newNotificationConnection)
+  }, [])
+
+  useEffect(() => {
+    if (notificationConnection) {
+      notificationConnection
+        .start()
+        .then(() => {
+          console.log('Order Connected to Notification Hub!')
+
+          notificationConnection.on('ReceiveMessage', (role, companyTarget, message) => {
+            //setNotifications((notifications) => [...notifications, message])
+            console.log('Received: ', role, message)
+            if (
+              (roles?.includes(role) || role == '') &&
+              (companyTarget == CompanyId || companyTarget == 0)
+            ) {
+              getApiData(params.id)
+            }
+            //localStorage.setItem('Messages', JSON.stringify({ cntMessages: cnt + 1, notifs: [] }))
+            //dispatch({ type: 'addMessage', countMessages: cnt + 1 })
+          })
+        })
+        .catch((e) => console.log('Notification Connection failed: ', e))
+    }
+  }, [notificationConnection])
 
   const saveData = async () => {
     if (isLoading) return
@@ -560,7 +603,7 @@ const Order = () => {
             onChange={(date) => handleDateDoc(date)}
             dateFormat="dd.MM.YYYY HH:MM"
             showTimeSelect
-            disabled={isLogist}
+            disabled={readOnly}
           />
         </CCol>
       </CRow>
@@ -573,7 +616,7 @@ const Order = () => {
             value={cs(item.number)}
             name="name"
             onChange={handler}
-            disabled={isLogist}
+            disabled={readOnly}
           />
         </CCol>
       </CRow>
@@ -585,7 +628,7 @@ const Order = () => {
             onChange={handleCompanyLogist}
             value={selectedOptionLogist}
             onInputChange={handleInputLogist}
-            isDisabled={isLogist}
+            isDisabled={readOnly}
           />
         </CCol>
       </CRow>
@@ -605,7 +648,7 @@ const Order = () => {
             onChange={handleCompany}
             value={selectedOption}
             onInputChange={handleInput}
-            isDisabled={isLogist}
+            isDisabled={readOnly}
           />
         </CCol>
       </CRow>
@@ -618,7 +661,7 @@ const Order = () => {
             selected={departDate}
             onChange={(date) => handleDateDep(date)}
             dateFormat="dd.MM.YYYY"
-            disabled={isLogist}
+            disabled={readOnly}
           />
         </CCol>
       </CRow>
@@ -638,7 +681,7 @@ const Order = () => {
             onChange={handleCargoType}
             value={selectedOptionCargoType}
             onInputChange={handleInputCargoType}
-            isDisabled={isLogist}
+            isDisabled={readOnly}
           />
         </CCol>
       </CRow>
@@ -648,7 +691,7 @@ const Order = () => {
       </CRow>
       <CRow className="mb-3">
         <CCol sm={3}>
-          <CButton onClick={saveData} className="btn btn-primary" disabled={isLogist}>
+          <CButton onClick={saveData} className="btn btn-primary" disabled={readOnly}>
             Сохранить
           </CButton>
         </CCol>

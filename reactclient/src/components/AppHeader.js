@@ -55,7 +55,7 @@ const AppHeader = () => {
     })
   }, [])
   const clearNotifs = () => {
-    localStorage.setItem('Messages', JSON.stringify({ cntMessages: 0, notifs: [] }))
+    localStorage.removeItem('Messages')
     dispatch({ type: 'addMessage', notifications: [] })
     setVisible(false)
   }

@@ -97,6 +97,7 @@ const Invoice = () => {
   const roles = localStorage.getItem('roles')
   const isLogist = roles.includes('Logist')
   const params = useParams()
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const getApiData = async (id, orderId) => {
     const itemId = id
@@ -127,6 +128,10 @@ const Invoice = () => {
   useEffect(() => {
     getApiData(params.id, searchParams.get('orderId'))
   }, [])
+
+  const close = () => {
+    navigate('/order/' + item.orderId)
+  }
 
   const saveData = async () => {
     if (isLoading) return
@@ -310,6 +315,9 @@ const Invoice = () => {
         <CCol sm={3}>
           <CButton onClick={saveData} className="btn btn-primary" disabled={isLogist}>
             Сохранить
+          </CButton>
+          <CButton onClick={close} className="btn btn-primary ms-1 ">
+            Закрыть
           </CButton>
         </CCol>
         <CCol sm={1}>

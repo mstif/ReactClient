@@ -108,7 +108,7 @@ const Register = () => {
     const data = await response.json()
 
     if (response.ok) {
-      document.location = '/login'
+      document.location = '#/login'
     }
 
     const messageEl = document.querySelector('.message')
