@@ -56,7 +56,7 @@ import markerIcon from 'src/map/images/marker-icon.png'
 import markerIcon_shadow from 'src/map/images/marker-shadow.png'
 import 'src/map/leaflet.css'
 //import '../../js/leaflet.js'
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'https://cdn.esm.sh/react-leaflet'
+//import { MapContainer, TileLayer, useMap, Marker, Popup } from 'https://cdn.esm.sh/react-leaflet'
 function AdressToMap(points) {
   if (typeof L !== 'undefined') {
     var map = L.map('map').setView([55.677584, 37.683105], 13)
